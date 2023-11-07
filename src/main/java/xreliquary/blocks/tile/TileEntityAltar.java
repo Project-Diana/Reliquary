@@ -1,13 +1,15 @@
 package xreliquary.blocks.tile;
 
-import lib.enderwizards.sandstone.blocks.tile.TileEntityBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+
+import lib.enderwizards.sandstone.blocks.tile.TileEntityBase;
 import xreliquary.Reliquary;
 import xreliquary.blocks.BlockAlkahestryAltar;
 import xreliquary.lib.Names;
 
 public class TileEntityAltar extends TileEntityBase {
+
     private int cycleTime;
     private boolean isActive;
     private int redstoneCount;
@@ -20,15 +22,11 @@ public class TileEntityAltar extends TileEntityBase {
 
     @Override
     public void updateEntity() {
-        if (!isActive)
-            return;
+        if (!isActive) return;
         int worldTime = (int) (worldObj.getWorldTime() % 24000);
-        if (worldTime >= 12000)
-            return;
-        if (!worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord))
-            return;
-        if (worldObj.isRemote)
-            return;
+        if (worldTime >= 12000) return;
+        if (!worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) return;
+        if (worldObj.isRemote) return;
         if (cycleTime > 0) {
             cycleTime--;
         } else {
@@ -39,10 +37,10 @@ public class TileEntityAltar extends TileEntityBase {
     }
 
     public void startCycle() {
-        //grabs the cycle time from the configs
+        // grabs the cycle time from the configs
         int defaultCycleTime = Reliquary.CONFIG.getInt(Names.altar, "time_in_minutes") * 60 * 20;
         int maximumVariance = Reliquary.CONFIG.getInt(Names.altar, "maximum_time_variance_in_minutes") * 60 * 20;
-        cycleTime = (int) (defaultCycleTime + (double)maximumVariance * worldObj.rand.nextGaussian());
+        cycleTime = (int) (defaultCycleTime + (double) maximumVariance * worldObj.rand.nextGaussian());
         isActive = true;
         redstoneCount = 0;
         BlockAlkahestryAltar.updateAltarBlockState(isActive(), worldObj, xCoord, yCoord, zCoord);
@@ -71,7 +69,9 @@ public class TileEntityAltar extends TileEntityBase {
         }
     }
 
-    public static int getRedstoneCost() { return Reliquary.CONFIG.getInt(Names.altar, "redstone_cost"); }
+    public static int getRedstoneCost() {
+        return Reliquary.CONFIG.getInt(Names.altar, "redstone_cost");
+    }
 
     public int getRedstoneCount() {
         return redstoneCount;

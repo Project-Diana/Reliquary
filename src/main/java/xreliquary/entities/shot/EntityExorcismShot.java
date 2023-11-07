@@ -7,6 +7,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class EntityExorcismShot extends EntityShotBase {
+
     public EntityExorcismShot(World par1World) {
         super(par1World);
     }
@@ -29,18 +30,23 @@ public class EntityExorcismShot extends EntityShotBase {
 
     @Override
     void doFiringEffects() {
-        worldObj.spawnParticle("mobSpellAmbient", posX + smallGauss(0.1D), posY + smallGauss(0.1D), posZ + smallGauss(0.1D), 0.5D, 0.5D, 0.5D);
+        worldObj.spawnParticle(
+            "mobSpellAmbient",
+            posX + smallGauss(0.1D),
+            posY + smallGauss(0.1D),
+            posZ + smallGauss(0.1D),
+            0.5D,
+            0.5D,
+            0.5D);
         worldObj.spawnParticle("flame", posX, posY, posZ, gaussian(motionX), gaussian(motionY), gaussian(motionZ));
     }
 
     @Override
     void onImpact(MovingObjectPosition mop) {
         if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mop.entityHit != null) {
-            if (mop.entityHit == shootingEntity)
-                return;
-            if (!(mop.entityHit instanceof EntityLivingBase))
-                return;
-            this.onImpact((EntityLivingBase)mop.entityHit);
+            if (mop.entityHit == shootingEntity) return;
+            if (!(mop.entityHit instanceof EntityLivingBase)) return;
+            this.onImpact((EntityLivingBase) mop.entityHit);
         } else if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             this.groundImpact(mop.sideHit);
         }
@@ -65,8 +71,14 @@ public class EntityExorcismShot extends EntityShotBase {
 
     @Override
     void spawnHitParticles(String string, int i) {
-        for (int particles = 0; particles < i; particles++)
-            worldObj.spawnParticle(string, posX + smallGauss(0.1D), posY + smallGauss(0.1D), posZ + smallGauss(0.1D), posGauss(1.0F), posGauss(1.0F), 0.0F);
+        for (int particles = 0; particles < i; particles++) worldObj.spawnParticle(
+            string,
+            posX + smallGauss(0.1D),
+            posY + smallGauss(0.1D),
+            posZ + smallGauss(0.1D),
+            posGauss(1.0F),
+            posGauss(1.0F),
+            0.0F);
     }
 
     private boolean isUndead(EntityLivingBase e) {

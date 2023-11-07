@@ -1,7 +1,9 @@
 package xreliquary.entities.potion;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,14 +15,14 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Created by Xeno on 3/11/14.
  */
 public abstract class EntityThrownPotion extends EntityThrowable {
+
     public EntityThrownPotion(World par1World) {
         super(par1World);
     }
@@ -72,8 +74,7 @@ public abstract class EntityThrownPotion extends EntityThrowable {
 
     protected void doSplashEffect() {
         this.doGroundSplashEffect();
-        if (!this.hasLivingEntityEffect())
-            return;
+        if (!this.hasLivingEntityEffect()) return;
         AxisAlignedBB bb = boundingBox.expand(4.0D, 2.0D, 4.0D);
         List eList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
         Iterator i = eList.iterator();
@@ -93,7 +94,14 @@ public abstract class EntityThrownPotion extends EntityThrowable {
         String var14 = "iconcrack_" + Item.getIdFromItem(Items.potionitem);
         Random var7 = rand;
         for (int var15 = 0; var15 < 8; ++var15) {
-            worldObj.spawnParticle(var14, this.posX, this.posY, this.posZ, var7.nextGaussian() * 0.15D, var7.nextDouble() * 0.2D, var7.nextGaussian() * 0.15D);
+            worldObj.spawnParticle(
+                var14,
+                this.posX,
+                this.posY,
+                this.posZ,
+                var7.nextGaussian() * 0.15D,
+                var7.nextDouble() * 0.2D,
+                var7.nextGaussian() * 0.15D);
         }
 
         String var19 = "spell";
@@ -105,7 +113,14 @@ public abstract class EntityThrownPotion extends EntityThrowable {
             double var27 = 0.01D + var7.nextDouble() * 0.5D;
             double var29 = Math.sin(var23) * var39;
             if (worldObj.isRemote) {
-                EntityFX var31 = Minecraft.getMinecraft().renderGlobal.doSpawnParticle(var19, this.posX + var25 * 0.1D, this.posY + 0.3D, this.posZ + var29 * 0.1D, var25, var27, var29);
+                EntityFX var31 = Minecraft.getMinecraft().renderGlobal.doSpawnParticle(
+                    var19,
+                    this.posX + var25 * 0.1D,
+                    this.posY + 0.3D,
+                    this.posZ + var29 * 0.1D,
+                    var25,
+                    var27,
+                    var29);
                 if (var31 != null) {
                     float var32 = 0.75F + var7.nextFloat() * 0.25F;
                     var31.setRBGColorF(this.getRed() * var32, this.getGreen() * var32, this.getBlue() * var32);
@@ -114,7 +129,13 @@ public abstract class EntityThrownPotion extends EntityThrowable {
             }
         }
 
-        worldObj.playSoundEffect(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "dig.glass", 1.0F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+        worldObj.playSoundEffect(
+            posX + 0.5D,
+            posY + 0.5D,
+            posZ + 0.5D,
+            "dig.glass",
+            1.0F,
+            worldObj.rand.nextFloat() * 0.1F + 0.9F);
     }
 
     // this gets called inside the on-impact method on EVERY living entity

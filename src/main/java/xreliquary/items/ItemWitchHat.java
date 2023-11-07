@@ -1,9 +1,10 @@
 package xreliquary.items;
 
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 

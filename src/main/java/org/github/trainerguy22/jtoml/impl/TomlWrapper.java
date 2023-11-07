@@ -1,14 +1,14 @@
 package org.github.trainerguy22.jtoml.impl;
 
-import org.github.trainerguy22.jtoml.Getter;
-import org.github.trainerguy22.jtoml.Util;
-
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.github.trainerguy22.jtoml.Getter;
+import org.github.trainerguy22.jtoml.Util;
 
 public class TomlWrapper implements Getter {
 
@@ -20,7 +20,8 @@ public class TomlWrapper implements Getter {
     /**
      * A matcher to retrieve the path to a key.
      */
-    protected final Matcher keyPathMatcher = Pattern.compile("((\\w+[.])+).*").matcher("");
+    protected final Matcher keyPathMatcher = Pattern.compile("((\\w+[.])+).*")
+        .matcher("");
 
     public TomlWrapper(Map<String, Object> context) {
         this.context = context;
@@ -90,19 +91,21 @@ public class TomlWrapper implements Getter {
                 Class<?> fieldType = f.getType();
                 String fieldName = (key == null || "".equals(key.trim())) ? f.getName() : key + "." + f.getName();
                 Object fieldValue = Util.Reflection.isTomlSupportedType(fieldType) ? //
-                        get(fieldName, fieldType) : getAs(fieldName, fieldType);
+                    get(fieldName, fieldType) : getAs(fieldName, fieldType);
                 Util.Reflection.setFieldValue(f, result, fieldValue);
             }
             return result;
         } catch (Throwable e) {
             throw new IllegalArgumentException("Could not map value of key `" + key + //
-                    "` to Object of class `" + clazz.getName() + "`.", e);
+                "` to Object of class `" + clazz.getName() + "`.", e);
         }
     }
 
     /**
      * Get the value whose key is the given parameter from the context map and cast it to the given class.
-     * <p>Returns null if the value is null.</p>
+     * <p>
+     * Returns null if the value is null.
+     * </p>
      *
      * @param key   the key to search the value for.
      * @param clazz the class of the resulting object
@@ -124,16 +127,27 @@ public class TomlWrapper implements Getter {
      * Get the path to a key.
      * A key can be anything like <code>(\w[.])*\w</code>
      * <p/>
-     * <p><code>keyPath("foo") -> "foo"</code></p>
-     * <p><code>keyPath("foo.bar") -> "foo"</code></p>
-     * <p><code>keyPath("foo.bar.bazz") -> "foo.bar"</code></p>
+     * <p>
+     * <code>keyPath("foo") -> "foo"</code>
+     * </p>
+     * <p>
+     * <code>keyPath("foo.bar") -> "foo"</code>
+     * </p>
+     * <p>
+     * <code>keyPath("foo.bar.bazz") -> "foo.bar"</code>
+     * </p>
      *
      * @param key the key
      * @return the path leading to the key.
      */
     private String keyPath(String key) {
-        if (keyPathMatcher.reset(key).matches()) {
-            return keyPathMatcher.group(1).substring(0, keyPathMatcher.group(1).length() - 1);
+        if (keyPathMatcher.reset(key)
+            .matches()) {
+            return keyPathMatcher.group(1)
+                .substring(
+                    0,
+                    keyPathMatcher.group(1)
+                        .length() - 1);
         } else {
             return key;
         }
@@ -148,8 +162,12 @@ public class TomlWrapper implements Getter {
      * @return the exception ready to be thrown
      */
     private IllegalArgumentException illegalArg(String key, Object value, Class<?> expected) {
-        return new IllegalArgumentException(String.format("Value for key `%s` is `%s`%s.", //
-                key, value, (value == null ? "" : ". Expected type was `" + expected.getName() + "`")));
+        return new IllegalArgumentException(
+            String.format(
+                "Value for key `%s` is `%s`%s.", //
+                key,
+                value,
+                (value == null ? "" : ". Expected type was `" + expected.getName() + "`")));
     }
 
     /**

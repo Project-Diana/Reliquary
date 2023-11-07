@@ -1,29 +1,29 @@
 package xreliquary.items;
 
+import java.util.List;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+
+import org.lwjgl.input.Keyboard;
+
 import com.google.common.collect.ImmutableMap;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lib.enderwizards.sandstone.init.ContentInit;
 import lib.enderwizards.sandstone.items.ItemToggleable;
 import lib.enderwizards.sandstone.util.LanguageHelper;
-import net.java.games.input.Component;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
-import org.lwjgl.input.Keyboard;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-import lib.enderwizards.sandstone.util.NBTHelper;
-
-import java.util.List;
 
 @ContentInit
 public class ItemHeroMedallion extends ItemToggleable {
@@ -66,19 +66,22 @@ public class ItemHeroMedallion extends ItemToggleable {
 
     @Override
     public IIcon getIcon(ItemStack itemStack, int renderPass) {
-        if (itemStack.getItemDamage() == 0 || renderPass != 1)
-            return this.itemIcon;
-        else
-            return iconOverlay;
+        if (itemStack.getItemDamage() == 0 || renderPass != 1) return this.itemIcon;
+        else return iconOverlay;
     }
 
     @Override
     public void addInformation(ItemStack ist, EntityPlayer par2EntityPlayer, List list, boolean par4) {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-            return;
-        this.formatTooltip(ImmutableMap.of("experience", String.valueOf(NBTHelper.getInteger("experience", ist))), ist, list);
-        if(this.isEnabled(ist))
-            LanguageHelper.formatTooltip("tooltip.absorb_active", ImmutableMap.of("item", EnumChatFormatting.GREEN + "XP"), ist, list);
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) return;
+        this.formatTooltip(
+            ImmutableMap.of("experience", String.valueOf(NBTHelper.getInteger("experience", ist))),
+            ist,
+            list);
+        if (this.isEnabled(ist)) LanguageHelper.formatTooltip(
+            "tooltip.absorb_active",
+            ImmutableMap.of("item", EnumChatFormatting.GREEN + "XP"),
+            ist,
+            list);
         LanguageHelper.formatTooltip("tooltip.absorb", null, ist, list);
     }
 
@@ -93,14 +96,14 @@ public class ItemHeroMedallion extends ItemToggleable {
     // this drains experience beyond level specified in configs
     @Override
     public void onUpdate(ItemStack ist, World world, Entity e, int i, boolean f) {
-        if (!this.isEnabled(ist))
-            return;
+        if (!this.isEnabled(ist)) return;
         if (e instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) e;
             // in order to make this stop at a specific level, we will need to do
             // a preemptive check for a specific level.
             for (int levelLoop = 0; levelLoop <= Math.sqrt(player.experienceLevel); ++levelLoop) {
-                if ((player.experienceLevel > getExperienceMinimum() || player.experience > 0F) && getExperience(ist) < Integer.MAX_VALUE) {
+                if ((player.experienceLevel > getExperienceMinimum() || player.experience > 0F)
+                    && getExperience(ist) < Integer.MAX_VALUE) {
                     decreasePlayerExperience(player);
                     increaseMedallionExperience(ist);
                 }
@@ -112,7 +115,8 @@ public class ItemHeroMedallion extends ItemToggleable {
     // using the method in the player class, might be worth testing
     // (player.addExperience(-1)?)
     public void decreasePlayerExperience(EntityPlayer player) {
-        if (player.experience - (1.0F / (float) player.xpBarCap()) <= 0 && player.experienceLevel > getExperienceMinimum()) {
+        if (player.experience - (1.0F / (float) player.xpBarCap()) <= 0
+            && player.experienceLevel > getExperienceMinimum()) {
             decreasePlayerLevel(player);
             return;
         }
@@ -148,14 +152,13 @@ public class ItemHeroMedallion extends ItemToggleable {
 
     @Override
     public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer player) {
-        if (world.isRemote)
-            return ist;
-        if (player.isSneaking())
-            return super.onItemRightClick(ist, world, player);
-            //turn it on/off.
+        if (world.isRemote) return ist;
+        if (player.isSneaking()) return super.onItemRightClick(ist, world, player);
+        // turn it on/off.
 
         int playerLevel = player.experienceLevel;
-        while (player.experienceLevel < getExperienceMaximum() && playerLevel == player.experienceLevel && getExperience(ist) > 0) {
+        while (player.experienceLevel < getExperienceMaximum() && playerLevel == player.experienceLevel
+            && getExperience(ist) > 0) {
             increasePlayerExperience(player);
             decreaseMedallionExperience(ist);
         }

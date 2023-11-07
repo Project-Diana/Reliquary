@@ -1,13 +1,14 @@
 package xreliquary.util.alkahestry;
 
-import lib.enderwizards.sandstone.util.ContentHelper;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.HashMap;
-import java.util.Map;
+import lib.enderwizards.sandstone.util.ContentHelper;
 
 public class Alkahestry {
 
@@ -19,19 +20,15 @@ public class Alkahestry {
     private static Map<String, AlkahestRecipe> REGISTRY = new HashMap<String, AlkahestRecipe>();
 
     public static void addKey(AlkahestRecipe recipe) {
-        if (recipe.dictionaryName == null)
-            REGISTRY.put(ContentHelper.getIdent(recipe.item.getItem()), recipe);
-        else
-            REGISTRY.put("OreDictionary:" + String.valueOf(OreDictionary.getOreID(recipe.dictionaryName)), recipe);
+        if (recipe.dictionaryName == null) REGISTRY.put(ContentHelper.getIdent(recipe.item.getItem()), recipe);
+        else REGISTRY.put("OreDictionary:" + String.valueOf(OreDictionary.getOreID(recipe.dictionaryName)), recipe);
     }
 
     public static AlkahestRecipe getDictionaryKey(ItemStack stack) {
         for (AlkahestRecipe recipe : getRegistry().values()) {
-            if (recipe.dictionaryName == null)
-                return null;
+            if (recipe.dictionaryName == null) return null;
             for (ItemStack dict : OreDictionary.getOres(recipe.dictionaryName)) {
-                if (OreDictionary.itemMatches(dict, stack, false))
-                    return recipe;
+                if (OreDictionary.itemMatches(dict, stack, false)) return recipe;
             }
         }
         return null;
@@ -57,8 +54,7 @@ public class Alkahestry {
         addKey(new AlkahestRecipe(new ItemStack(Items.gunpowder), 2, MIDDLE_TIER));
         addKey(new AlkahestRecipe(new ItemStack(Items.flint), 8, MIDDLE_TIER));
 
-
-        //high tier
+        // high tier
         addKey(new AlkahestRecipe(new ItemStack(Items.gold_ingot), 1, HIGH_TIER));
         addKey(new AlkahestRecipe(new ItemStack(Items.iron_ingot), 1, HIGH_TIER));
         addKey(new AlkahestRecipe(new ItemStack(Items.emerald), 1, HIGH_TIER));
@@ -77,7 +73,7 @@ public class Alkahestry {
 
         addKey(new AlkahestRecipe(new ItemStack(Items.diamond), 1, UBER_TIER));
 
-        //above uber
+        // above uber
         addKey(new AlkahestRecipe(new ItemStack(Items.nether_star), 1, UBER_TIER * 2));
     }
 

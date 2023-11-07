@@ -1,10 +1,11 @@
 package xreliquary.items;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import lib.enderwizards.sandstone.items.ItemBase;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 
 public abstract class ItemBauble extends ItemBase implements IBauble {
 
@@ -20,8 +21,11 @@ public abstract class ItemBauble extends ItemBase implements IBauble {
 
     @Override
     public void onEquipped(ItemStack stack, EntityLivingBase player) {
-        if (!player.worldObj.isRemote)
-            player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 2.2F));
+        if (!player.worldObj.isRemote) player.worldObj.playSoundAtEntity(
+            player,
+            "random.orb",
+            0.1F,
+            0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 2.2F));
         onWornTick(stack, player);
     }
 

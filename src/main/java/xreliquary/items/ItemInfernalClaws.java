@@ -1,10 +1,11 @@
 package xreliquary.items;
 
+import net.minecraft.item.ItemStack;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lib.enderwizards.sandstone.init.ContentInit;
 import lib.enderwizards.sandstone.items.ItemBase;
-import net.minecraft.item.ItemStack;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 

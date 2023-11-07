@@ -1,9 +1,5 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +7,25 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.Reliquary;
-import xreliquary.entities.shot.*;
+import xreliquary.entities.shot.EntityBlazeShot;
+import xreliquary.entities.shot.EntityBusterShot;
+import xreliquary.entities.shot.EntityConcussiveShot;
+import xreliquary.entities.shot.EntityEnderShot;
+import xreliquary.entities.shot.EntityExorcismShot;
+import xreliquary.entities.shot.EntityNeutralShot;
+import xreliquary.entities.shot.EntitySandShot;
+import xreliquary.entities.shot.EntitySeekerShot;
+import xreliquary.entities.shot.EntityStormShot;
 import xreliquary.lib.Colors;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-import lib.enderwizards.sandstone.util.NBTHelper;
 
 @ContentInit
 public class ItemHandgun extends ItemBase {
@@ -71,9 +80,13 @@ public class ItemHandgun extends ItemBase {
         NBTHelper.setShort("lastFiredShot", ist, i);
     }
 
-    public int getCooldown(ItemStack ist) { return NBTHelper.getShort("cooldownTime", ist); }
+    public int getCooldown(ItemStack ist) {
+        return NBTHelper.getShort("cooldownTime", ist);
+    }
 
-    public void setCooldown(ItemStack ist, int i) { NBTHelper.setShort("cooldownTime", ist, i); }
+    public void setCooldown(ItemStack ist, int i) {
+        NBTHelper.setShort("cooldownTime", ist, i);
+    }
 
     @Override
     public void onUpdate(ItemStack ist, World worldObj, Entity e, int i, boolean flag) {
@@ -91,7 +104,10 @@ public class ItemHandgun extends ItemBase {
                 player.setItemInUse(ist, this.getMaxItemUseDuration(ist));
             } else {
                 if (!worldObj.isRemote) {
-                    setCooldown(ist, Reference.PLAYER_HANDGUN_SKILL_MAXIMUM + Reference.HANDGUN_COOLDOWN_SKILL_OFFSET - Math.min(player.experienceLevel, Reference.PLAYER_HANDGUN_SKILL_MAXIMUM));
+                    setCooldown(
+                        ist,
+                        Reference.PLAYER_HANDGUN_SKILL_MAXIMUM + Reference.HANDGUN_COOLDOWN_SKILL_OFFSET
+                            - Math.min(player.experienceLevel, Reference.PLAYER_HANDGUN_SKILL_MAXIMUM));
 
                     fireBullet(ist, worldObj, player);
                 }
@@ -105,9 +121,10 @@ public class ItemHandgun extends ItemBase {
         int maxUseOffset = getItemUseDuration() - getPlayerReloadDelay(player);
         int actualCount = unadjustedCount - maxUseOffset;
         actualCount -= 1;
-        //you can't reload if you don't have any full mags left, so the rest of the method doesn't fire at all.
+        // you can't reload if you don't have any full mags left, so the rest of the method doesn't fire at all.
         if (!hasFilledMagazine(player)) {
-            //arbitrary "feels good" cooldown for after the reload - this one just plays so you can't "fail" at reloading too fast.
+            // arbitrary "feels good" cooldown for after the reload - this one just plays so you can't "fail" at
+            // reloading too fast.
             setCooldown(ist, 12);
 
             player.stopUsingItem();
@@ -115,7 +132,8 @@ public class ItemHandgun extends ItemBase {
         }
 
         if (actualCount == 0) {
-            //arbitrary "feels good" cooldown for after the reload - this is to prevent accidentally discharging the weapon immediately after reload.
+            // arbitrary "feels good" cooldown for after the reload - this is to prevent accidentally discharging the
+            // weapon immediately after reload.
             setCooldown(ist, 12);
             setBulletType(ist, getMagazineTypeAndRemoveOne(player));
             if (getBulletType(ist) != 0) {
@@ -148,21 +166,40 @@ public class ItemHandgun extends ItemBase {
     private void fireBullet(ItemStack ist, World worldObj, EntityPlayer player) {
         if (!worldObj.isRemote) {
             switch (getBulletType(ist)) {
-                case 0: return;
-                case Reference.NEUTRAL_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityNeutralShot(worldObj, player)); break;
-                case Reference.EXORCISM_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityExorcismShot(worldObj, player)); break;
-                case Reference.BLAZE_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityBlazeShot(worldObj, player)); break;
-                case Reference.ENDER_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityEnderShot(worldObj, player)); break;
-                case Reference.CONCUSSIVE_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityConcussiveShot(worldObj, player)); break;
-                case Reference.BUSTER_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityBusterShot(worldObj, player)); break;
-                case Reference.SEEKER_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntitySeekerShot(worldObj, player)); break;
-                case Reference.SAND_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntitySandShot(worldObj, player)); break;
-                case Reference.STORM_SHOT_INDEX: worldObj.spawnEntityInWorld(new EntityStormShot(worldObj, player));break;
+                case 0:
+                    return;
+                case Reference.NEUTRAL_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityNeutralShot(worldObj, player));
+                    break;
+                case Reference.EXORCISM_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityExorcismShot(worldObj, player));
+                    break;
+                case Reference.BLAZE_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityBlazeShot(worldObj, player));
+                    break;
+                case Reference.ENDER_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityEnderShot(worldObj, player));
+                    break;
+                case Reference.CONCUSSIVE_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityConcussiveShot(worldObj, player));
+                    break;
+                case Reference.BUSTER_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityBusterShot(worldObj, player));
+                    break;
+                case Reference.SEEKER_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntitySeekerShot(worldObj, player));
+                    break;
+                case Reference.SAND_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntitySandShot(worldObj, player));
+                    break;
+                case Reference.STORM_SHOT_INDEX:
+                    worldObj.spawnEntityInWorld(new EntityStormShot(worldObj, player));
+                    break;
             }
 
             worldObj.playSoundAtEntity(player, Reference.SHOT_SOUND, 0.2F, 1.2F);
 
-            //prevents the gun from forgetting that it fired a certain type of shot.
+            // prevents the gun from forgetting that it fired a certain type of shot.
             setLastFiredShotType(ist, getBulletType(ist));
 
             setBulletCount(ist, getBulletCount(ist) - 1);
@@ -190,8 +227,7 @@ public class ItemHandgun extends ItemBase {
             if (ist == null) {
                 continue;
             }
-            if (ist.getItem() == Reliquary.CONTENT.getItem(Names.magazine) && ist.getItemDamage() != 0)
-                return true;
+            if (ist.getItem() == Reliquary.CONTENT.getItem(Names.magazine) && ist.getItemDamage() != 0) return true;
         }
         return false;
     }
@@ -202,7 +238,8 @@ public class ItemHandgun extends ItemBase {
             if (player.inventory.mainInventory[slot] == null) {
                 continue;
             }
-            if (player.inventory.mainInventory[slot].getItem() == Reliquary.CONTENT.getItem(Names.magazine) && player.inventory.mainInventory[slot].getItemDamage() != 0) {
+            if (player.inventory.mainInventory[slot].getItem() == Reliquary.CONTENT.getItem(Names.magazine)
+                && player.inventory.mainInventory[slot].getItemDamage() != 0) {
                 bulletFound = player.inventory.mainInventory[slot].getItemDamage();
                 player.inventory.decrStackSize(slot, 1);
                 return bulletFound;
@@ -217,8 +254,8 @@ public class ItemHandgun extends ItemBase {
     }
 
     private int getPlayerReloadDelay(EntityPlayer player) {
-        return Reference.PLAYER_HANDGUN_SKILL_MAXIMUM + Reference.HANDGUN_RELOAD_SKILL_OFFSET - Math.min(player.experienceLevel, Reference.PLAYER_HANDGUN_SKILL_MAXIMUM);
+        return Reference.PLAYER_HANDGUN_SKILL_MAXIMUM + Reference.HANDGUN_RELOAD_SKILL_OFFSET
+            - Math.min(player.experienceLevel, Reference.PLAYER_HANDGUN_SKILL_MAXIMUM);
     }
-
 
 }

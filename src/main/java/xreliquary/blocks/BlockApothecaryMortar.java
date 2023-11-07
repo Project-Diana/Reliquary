@@ -1,9 +1,8 @@
 package xreliquary.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.blocks.BlockBase;
-import lib.enderwizards.sandstone.init.ContentInit;
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,12 +12,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.blocks.BlockBase;
+import lib.enderwizards.sandstone.init.ContentInit;
 import xreliquary.Reliquary;
 import xreliquary.blocks.tile.TileEntityMortar;
 import xreliquary.lib.Names;
-
-import java.util.List;
-import java.util.Random;
 
 @ContentInit
 public class BlockApothecaryMortar extends BlockBase {
@@ -32,7 +33,8 @@ public class BlockApothecaryMortar extends BlockBase {
     }
 
     @Override
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List cbList, Entity collisionEntity) {
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List cbList,
+        Entity collisionEntity) {
         this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 0.3125F, 0.75F);
         super.addCollisionBoxesToList(world, x, y, z, aabb, cbList, collisionEntity);
         this.setBlockBoundsForItemRender();
@@ -54,23 +56,36 @@ public class BlockApothecaryMortar extends BlockBase {
         return false;
     }
 
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metaMaybe, float playerX, float playerY, float playerZ) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metaMaybe, float playerX,
+        float playerY, float playerZ) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity == null || !(tileEntity instanceof TileEntityMortar))
-            return false;
+        if (tileEntity == null || !(tileEntity instanceof TileEntityMortar)) return false;
         TileEntityMortar mortar = (TileEntityMortar) tileEntity;
         ItemStack heldItem = player.getCurrentEquippedItem();
         if (heldItem == null) {
             mortar.usePestle();
-            world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, this.stepSound.getStepResourcePath(), (this.stepSound.getVolume() + 1.0F) / 2.0F, this.stepSound.getPitch() * 0.8F);
+            world.playSoundEffect(
+                x + 0.5F,
+                y + 0.5F,
+                z + 0.5F,
+                this.stepSound.getStepResourcePath(),
+                (this.stepSound.getVolume() + 1.0F) / 2.0F,
+                this.stepSound.getPitch() * 0.8F);
             player.swingItem();
             return false;
         }
         ItemStack[] mortarItems = mortar.getItemStacks();
         boolean putItemInSlot = false;
         for (int slot = 0; slot < mortarItems.length; slot++) {
-            ItemStack item = new ItemStack(player.getCurrentEquippedItem().getItem(), 1, player.getCurrentEquippedItem().getItemDamage());
-            item.setTagCompound(player.getCurrentEquippedItem().getTagCompound());
+            ItemStack item = new ItemStack(
+                player.getCurrentEquippedItem()
+                    .getItem(),
+                1,
+                player.getCurrentEquippedItem()
+                    .getItemDamage());
+            item.setTagCompound(
+                player.getCurrentEquippedItem()
+                    .getTagCompound());
             if (mortarItems[slot] == null && mortar.isItemValidForSlot(slot, item)) {
                 player.getCurrentEquippedItem().stackSize--;
                 if (player.getCurrentEquippedItem().stackSize == 0)

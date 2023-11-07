@@ -1,7 +1,8 @@
 package xreliquary.integration;
 
-import lib.enderwizards.sandstone.mod.ModIntegration;
 import org.apache.logging.log4j.Level;
+
+import lib.enderwizards.sandstone.mod.ModIntegration;
 import xreliquary.Reliquary;
 
 public class NEIModIntegration extends ModIntegration {

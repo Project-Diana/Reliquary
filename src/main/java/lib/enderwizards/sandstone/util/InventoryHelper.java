@@ -1,13 +1,13 @@
 package lib.enderwizards.sandstone.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InventoryHelper {
 
@@ -20,12 +20,14 @@ public class InventoryHelper {
     }
 
     public static void removeItem(ItemStack stack, IInventory inventory, int quantity, int limit) {
-        for (int slot = 0; slot < Math.min(inventory.getSizeInventory(), (limit > 0 ? limit : inventory.getSizeInventory())); slot++) {
+        for (int slot = 0; slot
+            < Math.min(inventory.getSizeInventory(), (limit > 0 ? limit : inventory.getSizeInventory())); slot++) {
             ItemStack ist = inventory.getStackInSlot(slot);
             if (ist == null) {
                 continue;
             }
-            if (inventory.getStackInSlot(slot).isItemEqual(stack)) {
+            if (inventory.getStackInSlot(slot)
+                .isItemEqual(stack)) {
                 while (quantity > 0 && inventory.getStackInSlot(slot) != null) {
                     inventory.setInventorySlotContents(slot, inventory.decrStackSize(slot, 1));
                     quantity--;
@@ -79,7 +81,8 @@ public class InventoryHelper {
 
     public static int getItemQuantity(ItemStack stack, IInventory inventory, int limit) {
         int itemQuantity = 0;
-        for (int slot = 0; slot < Math.min(inventory.getSizeInventory(), (limit > 0 ? limit : inventory.getSizeInventory())); slot++) {
+        for (int slot = 0; slot
+            < Math.min(inventory.getSizeInventory(), (limit > 0 ? limit : inventory.getSizeInventory())); slot++) {
             ItemStack newStack = inventory.getStackInSlot(slot);
             if (newStack == null) {
                 continue;
@@ -92,21 +95,21 @@ public class InventoryHelper {
     }
 
     public static boolean consumeItem(Object item, EntityPlayer player) {
-        return consumeItem(new Object[]{item}, player, 0, 1);
+        return consumeItem(new Object[] { item }, player, 0, 1);
     }
 
     public static boolean consumeItem(Object item, EntityPlayer player, int minCount) {
-        return consumeItem(new Object[]{item}, player, minCount, 1);
+        return consumeItem(new Object[] { item }, player, minCount, 1);
     }
 
     public static boolean consumeItem(Object item, EntityPlayer player, int minCount, int amountDecreased) {
-        return consumeItem(new Object[]{item}, player, minCount, amountDecreased);
+        return consumeItem(new Object[] { item }, player, minCount, amountDecreased);
     }
 
     public static boolean consumeItem(Object[] itemList, EntityPlayer player, int minCount, int amountDecreased) {
-        if (player.capabilities.isCreativeMode)
-            return true;
-        if (itemList.length == 0 || !(itemList[0] instanceof ItemStack || itemList[0] instanceof Item || itemList[0] instanceof Block))
+        if (player.capabilities.isCreativeMode) return true;
+        if (itemList.length == 0
+            || !(itemList[0] instanceof ItemStack || itemList[0] instanceof Item || itemList[0] instanceof Block))
             return false;
         List<Integer> suggestedSlots = new ArrayList<Integer>();
         int itemCount = 0;
@@ -117,9 +120,9 @@ public class InventoryHelper {
 
             ItemStack slotStack = player.inventory.mainInventory[slot];
             for (Object stack : itemList) {
-                if ((stack instanceof ItemStack && slotStack.isItemEqual((ItemStack) stack)) ||
-                        (stack instanceof Block && ContentHelper.areItemsEqual(Item.getItemFromBlock((Block) stack), slotStack.getItem()) ||
-                                (stack instanceof Item && ContentHelper.areItemsEqual((Item) stack, slotStack.getItem())))) {
+                if ((stack instanceof ItemStack && slotStack.isItemEqual((ItemStack) stack)) || (stack instanceof Block
+                    && ContentHelper.areItemsEqual(Item.getItemFromBlock((Block) stack), slotStack.getItem())
+                    || (stack instanceof Item && ContentHelper.areItemsEqual((Item) stack, slotStack.getItem())))) {
                     itemCount += player.inventory.mainInventory[slot].stackSize;
                     suggestedSlots.add(slot);
                 }

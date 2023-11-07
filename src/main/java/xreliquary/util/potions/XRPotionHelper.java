@@ -2,6 +2,7 @@ package xreliquary.util.potions;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+
 import xreliquary.items.ItemPotionEssence;
 
 /**
@@ -16,7 +17,9 @@ public class XRPotionHelper {
 
     public static boolean isItemIngredient(ItemStack ist) {
         for (PotionIngredient ingredient : PotionMap.getIngredients()) {
-            if (ingredient.itemName.equals(ist.getItem().getUnlocalizedNameInefficiently(ist))) {
+            if (ingredient.itemName.equals(
+                ist.getItem()
+                    .getUnlocalizedNameInefficiently(ist))) {
                 return true;
             }
         }
@@ -25,10 +28,9 @@ public class XRPotionHelper {
 
     public static int getPotionIdByName(String name) {
         for (Potion potion : Potion.potionTypes) {
-            if (potion == null)
-                continue;
-            if (potion.getName().equals("potion." + name))
-                return potion.getId();
+            if (potion == null) continue;
+            if (potion.getName()
+                .equals("potion." + name)) return potion.getId();
         }
         return 0;
     }

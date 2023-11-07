@@ -1,9 +1,5 @@
 package xreliquary.items.alkahestry;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import lib.enderwizards.sandstone.util.ContentHelper;
-import lib.enderwizards.sandstone.util.NBTHelper;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
@@ -11,9 +7,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import xreliquary.Reliquary;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import lib.enderwizards.sandstone.util.ContentHelper;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.items.ItemAlkahestryTome;
-import xreliquary.lib.Names;
 import xreliquary.util.alkahestry.AlkahestRecipe;
 import xreliquary.util.alkahestry.Alkahestry;
 
@@ -29,24 +28,25 @@ public class AlkahestryCraftingRecipe implements IRecipe {
         for (int count = 0; count < inv.getSizeInventory(); count++) {
             ItemStack stack = inv.getStackInSlot(count);
             if (stack != null) {
-                if (ContentHelper.getIdent(stack.getItem()).equals(ContentHelper.getIdent(returnedItem))) {
+                if (ContentHelper.getIdent(stack.getItem())
+                    .equals(ContentHelper.getIdent(returnedItem))) {
                     tome = stack.copy();
-                } else if (!ContentHelper.getIdent(stack.getItem()).equals(ContentHelper.getIdent(returnedItem))) {
-                    if (valid == 0) {
-                        valid = 1;
-                        itemStack = stack;
-                    } else {
-                        valid = 2;
+                } else if (!ContentHelper.getIdent(stack.getItem())
+                    .equals(ContentHelper.getIdent(returnedItem))) {
+                        if (valid == 0) {
+                            valid = 1;
+                            itemStack = stack;
+                        } else {
+                            valid = 2;
+                        }
                     }
-                }
             }
         }
         if (tome != null && valid == 1 && itemStack != null) {
             AlkahestRecipe recipe = null;
-            if (Alkahestry.getDictionaryKey(itemStack) == null)
-                recipe = Alkahestry.getRegistry().get(ContentHelper.getIdent(itemStack.getItem()));
-            else
-                recipe = Alkahestry.getDictionaryKey(itemStack);
+            if (Alkahestry.getDictionaryKey(itemStack) == null) recipe = Alkahestry.getRegistry()
+                .get(ContentHelper.getIdent(itemStack.getItem()));
+            else recipe = Alkahestry.getDictionaryKey(itemStack);
             return recipe != null && (NBTHelper.getInteger("redstone", tome) - recipe.cost >= 0);
         } else {
             return false;
@@ -64,9 +64,10 @@ public class AlkahestryCraftingRecipe implements IRecipe {
                 if (stack.getItem() instanceof ItemAlkahestryTome) {
                     tome = stack;
                 }
-                if (!(ContentHelper.getIdent(stack.getItem()).equals(ContentHelper.getIdent(returnedItem)))) {
-                    if (Alkahestry.getDictionaryKey(stack) == null)
-                        returned = Alkahestry.getRegistry().get(ContentHelper.getIdent(stack.getItem()));
+                if (!(ContentHelper.getIdent(stack.getItem())
+                    .equals(ContentHelper.getIdent(returnedItem)))) {
+                    if (Alkahestry.getDictionaryKey(stack) == null) returned = Alkahestry.getRegistry()
+                        .get(ContentHelper.getIdent(stack.getItem()));
                     else {
                         returned = Alkahestry.getDictionaryKey(stack);
                         dictStack = stack;
@@ -87,34 +88,33 @@ public class AlkahestryCraftingRecipe implements IRecipe {
         for (int count = 0; count < inv.getSizeInventory(); count++) {
             ItemStack stack = inv.getStackInSlot(count);
             if (stack != null) {
-                if (!(ContentHelper.getIdent(stack.getItem()).equals(ContentHelper.getIdent(returnedItem)))) {
-                    if (Alkahestry.getDictionaryKey(stack) == null)
-                        returned = Alkahestry.getRegistry().get(ContentHelper.getIdent(stack.getItem()));
+                if (!(ContentHelper.getIdent(stack.getItem())
+                    .equals(ContentHelper.getIdent(returnedItem)))) {
+                    if (Alkahestry.getDictionaryKey(stack) == null) returned = Alkahestry.getRegistry()
+                        .get(ContentHelper.getIdent(stack.getItem()));
                     else {
                         returned = Alkahestry.getDictionaryKey(stack);
                     }
                 }
             }
         }
-        if (returned == null)
-            return 0;
+        if (returned == null) return 0;
         return returned.cost;
     }
 
-
     @SubscribeEvent
-    public void onItemCraftedEvent(PlayerEvent.ItemCraftedEvent event)
-    {
-        if (event.crafting == null)
-            return;
-        if (event.crafting.getItem() == Items.redstone)
-            return;
+    public void onItemCraftedEvent(PlayerEvent.ItemCraftedEvent event) {
+        if (event.crafting == null) return;
+        if (event.crafting.getItem() == Items.redstone) return;
         for (int i = 0; i < event.craftMatrix.getSizeInventory(); ++i) {
             ItemStack stack = event.craftMatrix.getStackInSlot(i);
-            if (stack == null)
-                continue;
+            if (stack == null) continue;
             if (stack.getItem() instanceof ItemAlkahestryTome) {
-                NBTHelper.setInteger("redstone", event.craftMatrix.getStackInSlot(i), NBTHelper.getInteger("redstone", event.craftMatrix.getStackInSlot(i)) - getCraftingResultCost(event.craftMatrix));
+                NBTHelper.setInteger(
+                    "redstone",
+                    event.craftMatrix.getStackInSlot(i),
+                    NBTHelper.getInteger("redstone", event.craftMatrix.getStackInSlot(i))
+                        - getCraftingResultCost(event.craftMatrix));
             }
         }
 

@@ -1,15 +1,7 @@
 package xreliquary.items;
 
-import com.google.common.collect.ImmutableMap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
-import lib.enderwizards.sandstone.items.ItemToggleable;
-import lib.enderwizards.sandstone.util.InventoryHelper;
-import lib.enderwizards.sandstone.util.LanguageHelper;
-import lib.enderwizards.sandstone.util.NBTHelper;
-import net.minecraft.block.Block;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,12 +10,21 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+
 import org.lwjgl.input.Keyboard;
+
+import com.google.common.collect.ImmutableMap;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemToggleable;
+import lib.enderwizards.sandstone.util.InventoryHelper;
+import lib.enderwizards.sandstone.util.LanguageHelper;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.Reliquary;
 import xreliquary.entities.EntitySpecialSnowball;
 import xreliquary.lib.Names;
-
-import java.util.List;
 
 @ContentInit
 public class ItemIceRod extends ItemToggleable {
@@ -37,11 +38,18 @@ public class ItemIceRod extends ItemToggleable {
 
     @Override
     public void addInformation(ItemStack ist, EntityPlayer player, List list, boolean par4) {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-            return;
-        this.formatTooltip(ImmutableMap.of("charge", Integer.toString(NBTHelper.getInteger("snowballs", ist))), ist, list);
-        if(this.isEnabled(ist))
-            LanguageHelper.formatTooltip("tooltip.absorb_active", ImmutableMap.of("item", EnumChatFormatting.BLUE + Items.snowball.getItemStackDisplayName(new ItemStack(Items.snowball))), ist, list);
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) return;
+        this.formatTooltip(
+            ImmutableMap.of("charge", Integer.toString(NBTHelper.getInteger("snowballs", ist))),
+            ist,
+            list);
+        if (this.isEnabled(ist)) LanguageHelper.formatTooltip(
+            "tooltip.absorb_active",
+            ImmutableMap.of(
+                "item",
+                EnumChatFormatting.BLUE + Items.snowball.getItemStackDisplayName(new ItemStack(Items.snowball))),
+            ist,
+            list);
         LanguageHelper.formatTooltip("tooltip.absorb", null, ist, list);
     }
 
@@ -52,9 +60,20 @@ public class ItemIceRod extends ItemToggleable {
         canRepair = false;
     }
 
-    public int getSnowballCap() { return Reliquary.CONFIG.getInt(this instanceof ItemGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_limit"); }
-    public int getSnowballCost() { return Reliquary.CONFIG.getInt(this instanceof ItemGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_cost"); }
-    public int getSnowballWorth() { return Reliquary.CONFIG.getInt(this instanceof ItemGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_worth"); }
+    public int getSnowballCap() {
+        return Reliquary.CONFIG
+            .getInt(this instanceof ItemGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_limit");
+    }
+
+    public int getSnowballCost() {
+        return Reliquary.CONFIG
+            .getInt(this instanceof ItemGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_cost");
+    }
+
+    public int getSnowballWorth() {
+        return Reliquary.CONFIG
+            .getInt(this instanceof ItemGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_worth");
+    }
 
     @Override
     public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack ist) {
@@ -63,9 +82,8 @@ public class ItemIceRod extends ItemToggleable {
 
     @Override
     public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer player) {
-        //acts as a cooldown.
-        if (player.isSwingInProgress)
-            return ist;
+        // acts as a cooldown.
+        if (player.isSwingInProgress) return ist;
         player.swingItem();
         if (!player.isSneaking()) {
             if (NBTHelper.getInteger("snowballs", ist) >= getSnowballCost()) {
@@ -85,14 +103,12 @@ public class ItemIceRod extends ItemToggleable {
 
     @Override
     public void onUpdate(ItemStack ist, World world, Entity e, int i, boolean b) {
-        if (world.isRemote)
-            return;
+        if (world.isRemote) return;
         EntityPlayer player = null;
         if (e instanceof EntityPlayer) {
             player = (EntityPlayer) e;
         }
-        if (player == null)
-            return;
+        if (player == null) return;
 
         if (this.isEnabled(ist)) {
             if (NBTHelper.getInteger("snowballs", ist) + getSnowballWorth() <= getSnowballCap()) {

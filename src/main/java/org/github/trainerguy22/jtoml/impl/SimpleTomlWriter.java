@@ -1,13 +1,13 @@
 package org.github.trainerguy22.jtoml.impl;
 
-import org.github.trainerguy22.jtoml.TomlWriter;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import org.github.trainerguy22.jtoml.TomlWriter;
 
 public class SimpleTomlWriter implements TomlWriter {
 

@@ -1,18 +1,20 @@
 package lib.enderwizards.sandstone.util.data;
 
-import lib.enderwizards.sandstone.util.WorldSaveFile;
-import lib.enderwizards.sandstone.util.misc.Duo;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+
+import lib.enderwizards.sandstone.util.WorldSaveFile;
+import lib.enderwizards.sandstone.util.misc.Duo;
 
 /**
  * Created by Xeno on 10/19/2014.
  */
 public class ItemData extends WorldSaveFile {
+
     private List<Duo<UUID, NBTTagCompound>> itemMap = new ArrayList<Duo<UUID, NBTTagCompound>>();
 
     public ItemData() {
@@ -21,7 +23,7 @@ public class ItemData extends WorldSaveFile {
 
     @Override
     protected void onSave(NBTTagCompound nbt) {
-        //NBTTagList tagList = nbt.getTagList("Items", 10);
+        // NBTTagList tagList = nbt.getTagList("Items", 10);
         NBTTagList itemsToSave = new NBTTagList();
         for (Duo<UUID, NBTTagCompound> item : itemMap) {
             NBTTagCompound itemTag = new NBTTagCompound();
@@ -34,22 +36,22 @@ public class ItemData extends WorldSaveFile {
 
     @Override
     protected void onLoad(NBTTagCompound nbt) {
-        if (nbt.getTagList("Items", 10) == null)
-            nbt.setTag("Items", new NBTTagList());
+        if (nbt.getTagList("Items", 10) == null) nbt.setTag("Items", new NBTTagList());
         NBTTagList itemsToLoad = nbt.getTagList("Items", 10);
         for (int i = 0; i < itemsToLoad.tagCount(); ++i) {
             NBTTagCompound itemTag = itemsToLoad.getCompoundTagAt(i);
-            Duo<UUID, NBTTagCompound> duoTag = new Duo(UUID.fromString(itemTag.getString("UUID")), itemTag.getTag("NBTTag"));
+            Duo<UUID, NBTTagCompound> duoTag = new Duo(
+                UUID.fromString(itemTag.getString("UUID")),
+                itemTag.getTag("NBTTag"));
             itemMap.add(duoTag);
         }
     }
 
     public NBTTagCompound getTag(UUID itemUUID) {
         for (Duo<UUID, NBTTagCompound> itemTag : itemMap) {
-            if (itemTag.one.equals(itemUUID))
-                return itemTag.two;
+            if (itemTag.one.equals(itemUUID)) return itemTag.two;
         }
-        //didn't find the tag, make a new one.
+        // didn't find the tag, make a new one.
         NBTTagCompound emptyCompound = new NBTTagCompound();
         setTag(itemUUID, emptyCompound);
         return emptyCompound;
@@ -69,7 +71,6 @@ public class ItemData extends WorldSaveFile {
                 break;
             }
         }
-        for (Duo<UUID, NBTTagCompound> removeThisTag : listSlatedForRemoval)
-            itemMap.remove(removeThisTag);
+        for (Duo<UUID, NBTTagCompound> removeThisTag : listSlatedForRemoval) itemMap.remove(removeThisTag);
     }
 }

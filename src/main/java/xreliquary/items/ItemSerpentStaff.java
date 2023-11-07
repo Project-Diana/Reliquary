@@ -1,15 +1,16 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.entities.EntityKrakenSlime;
 import xreliquary.lib.Names;
@@ -44,8 +45,7 @@ public class ItemSerpentStaff extends ItemBase {
 
     @Override
     public void onUsingTick(ItemStack item, EntityPlayer player, int count) {
-        if (player.worldObj.isRemote || count % 3 != 0)
-            return;
+        if (player.worldObj.isRemote || count % 3 != 0) return;
 
         player.worldObj.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
         player.worldObj.spawnEntityInWorld(new EntityKrakenSlime(player.worldObj, player));
@@ -53,9 +53,8 @@ public class ItemSerpentStaff extends ItemBase {
     }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-    {
-        //drain effect
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+        // drain effect
         int drain = player.worldObj.rand.nextInt(4);
         if (entity.attackEntityFrom(DamageSource.causePlayerDamage(player), drain)) {
             player.heal(drain);

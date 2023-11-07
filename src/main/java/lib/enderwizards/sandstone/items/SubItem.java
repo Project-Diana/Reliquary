@@ -1,15 +1,16 @@
 package lib.enderwizards.sandstone.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.mod.ModRegistry;
-import lib.enderwizards.sandstone.util.LanguageHelper;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.mod.ModRegistry;
+import lib.enderwizards.sandstone.util.LanguageHelper;
 
 public class SubItem {
 
@@ -22,8 +23,7 @@ public class SubItem {
     }
 
     public boolean setParent(ItemMultiple parent) {
-        if (this.parent != null)
-            return false;
+        if (this.parent != null) return false;
         this.parent = parent;
         return true;
     }
@@ -50,7 +50,13 @@ public class SubItem {
 
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
-        itemIcon = iconRegister.registerIcon(ModRegistry.getID(this.parent.getClass().getCanonicalName()) + ":" + this.getUnlocalizedName().substring(5));
+        itemIcon = iconRegister.registerIcon(
+            ModRegistry.getID(
+                this.parent.getClass()
+                    .getCanonicalName())
+                + ":"
+                + this.getUnlocalizedName()
+                    .substring(5));
     }
 
 }

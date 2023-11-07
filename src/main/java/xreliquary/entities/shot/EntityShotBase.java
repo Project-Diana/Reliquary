@@ -1,23 +1,33 @@
 package xreliquary.entities.shot;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import xreliquary.Reliquary;
 import xreliquary.lib.ClientReference;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
 
-import java.util.Iterator;
-import java.util.List;
-
 public abstract class EntityShotBase extends Entity implements IProjectile {
+
     protected int xTile = -1;
     protected int yTile = -1;
     protected int zTile = -1;
@@ -47,14 +57,21 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
         this(par1World);
         shootingEntity = par2EntityPlayer;
         float par3 = 0.8F;
-        this.setLocationAndAngles(par2EntityPlayer.posX, par2EntityPlayer.posY + par2EntityPlayer.getEyeHeight(), par2EntityPlayer.posZ, par2EntityPlayer.rotationYaw, par2EntityPlayer.rotationPitch);
+        this.setLocationAndAngles(
+            par2EntityPlayer.posX,
+            par2EntityPlayer.posY + par2EntityPlayer.getEyeHeight(),
+            par2EntityPlayer.posZ,
+            par2EntityPlayer.rotationYaw,
+            par2EntityPlayer.rotationPitch);
         posX -= MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
         posY -= 0.2D;
         posZ -= MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
         this.setPosition(posX, posY, posZ);
         yOffset = 0.0F;
-        motionX = -MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI);
-        motionZ = MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI);
+        motionX = -MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI)
+            * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI);
+        motionZ = MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI)
+            * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI);
         motionY = -MathHelper.sin(rotationPitch / 180.0F * (float) Math.PI);
         this.setThrowableHeading(motionX, motionY, motionZ, par3 * 1.5F, 1.0F);
     }
@@ -126,18 +143,18 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
     // require an originating player. Consider deprecating this.
     protected void ensurePlayerShooterEntity() {
         if (shootingEntity == null) {
-            List players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(posX - 1, posY - 1, posZ - 1, posX + 1, posY + 1, posZ + 1));
+            List players = worldObj.getEntitiesWithinAABB(
+                EntityPlayer.class,
+                AxisAlignedBB.getBoundingBox(posX - 1, posY - 1, posZ - 1, posX + 1, posY + 1, posZ + 1));
             Iterator i = players.iterator();
             double closestDistance = Double.MAX_VALUE;
             EntityPlayer closestPlayer = null;
             while (i.hasNext()) {
                 EntityPlayer e = (EntityPlayer) i.next();
                 double distance = e.getDistanceToEntity(this);
-                if (distance < closestDistance)
-                    closestPlayer = e;
+                if (distance < closestDistance) closestPlayer = e;
             }
-            if (closestPlayer != null)
-                shootingEntity = closestPlayer;
+            if (closestPlayer != null) shootingEntity = closestPlayer;
         }
     }
 
@@ -152,8 +169,7 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
         // bullets fly reasonably fast. if it stays "alive" for more than 30
         // seconds
         // this forces it to de-spawn.. just to be on the safe side.
-        if (ticksInAir > 600)
-            this.setDead();
+        if (ticksInAir > 600) this.setDead();
         ensurePlayerShooterEntity();
 
         if (prevRotationPitch == 0.0F && prevRotationYaw == 0.0F) {
@@ -166,9 +182,11 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
 
         if (block.getMaterial() != Material.air) {
             block.setBlockBoundsBasedOnState(this.worldObj, this.xTile, this.yTile, this.zTile);
-            AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile, this.zTile);
+            AxisAlignedBB axisalignedbb = block
+                .getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile, this.zTile);
 
-            if (axisalignedbb != null && axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ)))
+            if (axisalignedbb != null
+                && axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ)))
                 this.inGround = true;
 
         }
@@ -176,24 +194,35 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
         if (!inGround) {
             ++ticksInAir;
             if (ticksInAir > 1 && ticksInAir < 3) {
-                worldObj.spawnParticle("flame", posX + smallGauss(0.1D), posY + smallGauss(0.1D), posZ + smallGauss(0.1D), 0D, 0D, 0D);
-                for (int particles = 0; particles < 3; particles++)
-                    this.doFiringEffects();
+                worldObj.spawnParticle(
+                    "flame",
+                    posX + smallGauss(0.1D),
+                    posY + smallGauss(0.1D),
+                    posZ + smallGauss(0.1D),
+                    0D,
+                    0D,
+                    0D);
+                for (int particles = 0; particles < 3; particles++) this.doFiringEffects();
 
-            } else
-                this.doFlightEffects();
+            } else this.doFlightEffects();
 
             Vec3 posVector = Vec3.createVectorHelper(posX, posY, posZ);
             Vec3 approachVector = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
-            MovingObjectPosition objectStruckByVector = worldObj.func_147447_a(posVector, approachVector, false, true, false);
+            MovingObjectPosition objectStruckByVector = worldObj
+                .func_147447_a(posVector, approachVector, false, true, false);
             posVector = Vec3.createVectorHelper(posX, posY, posZ);
             approachVector = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
-            if (objectStruckByVector != null)
-                approachVector = Vec3.createVectorHelper(objectStruckByVector.hitVec.xCoord, objectStruckByVector.hitVec.yCoord, objectStruckByVector.hitVec.zCoord);
+            if (objectStruckByVector != null) approachVector = Vec3.createVectorHelper(
+                objectStruckByVector.hitVec.xCoord,
+                objectStruckByVector.hitVec.yCoord,
+                objectStruckByVector.hitVec.zCoord);
 
             Entity hitEntity = null;
-            List struckEntitiesInAABB = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+            List struckEntitiesInAABB = worldObj.getEntitiesWithinAABBExcludingEntity(
+                this,
+                boundingBox.addCoord(motionX, motionY, motionZ)
+                    .expand(1.0D, 1.0D, 1.0D));
             double var7 = 0.0D;
             Iterator struckEntityIterator = struckEntitiesInAABB.iterator();
             float var11;
@@ -216,13 +245,11 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
                 }
             }
 
-            if (hitEntity != null)
-                objectStruckByVector = new MovingObjectPosition(hitEntity);
+            if (hitEntity != null) objectStruckByVector = new MovingObjectPosition(hitEntity);
 
             if (objectStruckByVector != null) {
                 this.onImpact(objectStruckByVector);
-                if (scheduledForDeath)
-                    this.setDead();
+                if (scheduledForDeath) this.setDead();
             }
 
             this.moveEntity(motionX, motionY, motionZ);
@@ -327,7 +354,7 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
      * @param d haphazardly determines the upper bounds of the [always
      *          positive] gaussian
      * @return a [comparatively] normal gaussian ranging from 75% to 125% of the
-     * parameter d
+     *         parameter d
      */
     protected double gaussian(double d) {
         return d + d * ((rand.nextFloat() - 0.5D) / 4);
@@ -337,7 +364,7 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
      * @param d haphazardly determines the upper bounds of the [always
      *          positive] gaussian
      * @return a [comparatively] low gaussian ranging from 25% to 75% of the
-     * parameter d
+     *         parameter d
      */
     protected double lowGauss(double d) {
         return d - d * (rand.nextFloat() / 4 + 0.5);
@@ -377,22 +404,28 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
             for (int particles = 0; particles < 4; particles++) {
                 switch (sideHit) {
                     case 0:
-                        worldObj.spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), -gaussian(0.1D), gaussian(0.1D));
+                        worldObj
+                            .spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), -gaussian(0.1D), gaussian(0.1D));
                         break;
                     case 1:
-                        worldObj.spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
+                        worldObj
+                            .spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
                         break;
                     case 2:
-                        worldObj.spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), -gaussian(0.1D));
+                        worldObj
+                            .spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), -gaussian(0.1D));
                         break;
                     case 3:
-                        worldObj.spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
+                        worldObj
+                            .spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
                         break;
                     case 4:
-                        worldObj.spawnParticle("smoke", posX, posY, posZ, -gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
+                        worldObj
+                            .spawnParticle("smoke", posX, posY, posZ, -gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
                         break;
                     case 5:
-                        worldObj.spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
+                        worldObj
+                            .spawnParticle("smoke", posX, posY, posZ, gaussian(0.1D), gaussian(0.1D), gaussian(0.1D));
                         break;
                 }
             }
@@ -406,8 +439,11 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
      */
     protected void seekTarget() {
         Entity closestTarget = null;
-        List<String> entitiesThatCanBeHunted = (List<String>) Reliquary.CONFIG.get(Names.seeker_shot, "entities_that_can_be_hunted");
-        List targetsList = worldObj.getEntitiesWithinAABBExcludingEntity(this, AxisAlignedBB.getBoundingBox(posX - 5, posY - 5, posZ - 5, posX + 5, posY + 5, posZ + 5));
+        List<String> entitiesThatCanBeHunted = (List<String>) Reliquary.CONFIG
+            .get(Names.seeker_shot, "entities_that_can_be_hunted");
+        List targetsList = worldObj.getEntitiesWithinAABBExcludingEntity(
+            this,
+            AxisAlignedBB.getBoundingBox(posX - 5, posY - 5, posZ - 5, posX + 5, posY + 5, posZ + 5));
         Iterator iTarget = targetsList.iterator();
         double closestDistance = Double.MAX_VALUE;
         while (iTarget.hasNext()) {
@@ -415,8 +451,8 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
 
             Class entityClass = currentTarget.getClass();
             String entityName = (String) EntityList.classToStringMapping.get(entityClass);
-            if (!entitiesThatCanBeHunted.contains(entityName) || (currentTarget == shootingEntity) || (currentTarget.isDead))
-                continue;
+            if (!entitiesThatCanBeHunted.contains(entityName) || (currentTarget == shootingEntity)
+                || (currentTarget.isDead)) continue;
             // goes for the closest thing it can
             if (this.getDistanceToEntity(currentTarget) < closestDistance) {
                 closestDistance = this.getDistanceToEntity(currentTarget);
@@ -434,7 +470,7 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
             double trueX = this.boundingBox.minX + this.boundingBox.maxX;
             trueX /= 2D;
             double trueY = this.boundingBox.minY + this.yOffset;
-            trueY -= this.ySize  / 2D;
+            trueY -= this.ySize / 2D;
             double trueZ = this.boundingBox.minZ + this.boundingBox.maxZ;
             trueZ /= 2D;
             Vec3 seekVector = Vec3.createVectorHelper(x - trueX, y - trueY, z - trueZ);
@@ -443,7 +479,7 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
             this.motionX = seekVector.xCoord * 0.4D;
             this.motionY = seekVector.yCoord * 0.4D;
             this.motionZ = seekVector.zCoord * 0.4D;
-            if(worldObj.isRemote){
+            if (worldObj.isRemote) {
                 this.setVelocity(motionX, motionY, motionZ);
             }
         }
@@ -459,9 +495,9 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
 
     /**
      * @param e an optional parameter, some shots need to know what entity
-     *            they're hitting for damage counts
+     *          they're hitting for damage counts
      * @return the int of damage the shot should deal. Most of these use my "dX"
-     * methods of this class to randomize damage, to a degree.
+     *         methods of this class to randomize damage, to a degree.
      */
     abstract int getDamageOfShot(EntityLivingBase e);
 
@@ -511,24 +547,15 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
     abstract void spawnHitParticles(String string, int i);
 
     protected int getShotType() {
-        if (this instanceof EntityNeutralShot)
-            return Reference.NEUTRAL_SHOT_INDEX;
-        else if (this instanceof EntityExorcismShot)
-            return Reference.EXORCISM_SHOT_INDEX;
-        else if (this instanceof EntityBlazeShot)
-            return Reference.BLAZE_SHOT_INDEX;
-        else if (this instanceof EntityEnderShot)
-            return Reference.ENDER_SHOT_INDEX;
-        else if (this instanceof EntityConcussiveShot)
-            return Reference.CONCUSSIVE_SHOT_INDEX;
-        else if (this instanceof EntityBusterShot)
-            return Reference.BUSTER_SHOT_INDEX;
-        else if (this instanceof EntitySeekerShot)
-            return Reference.SEEKER_SHOT_INDEX;
-        else if (this instanceof EntitySandShot)
-            return Reference.SAND_SHOT_INDEX;
-        else if (this instanceof EntityStormShot)
-            return Reference.STORM_SHOT_INDEX;
+        if (this instanceof EntityNeutralShot) return Reference.NEUTRAL_SHOT_INDEX;
+        else if (this instanceof EntityExorcismShot) return Reference.EXORCISM_SHOT_INDEX;
+        else if (this instanceof EntityBlazeShot) return Reference.BLAZE_SHOT_INDEX;
+        else if (this instanceof EntityEnderShot) return Reference.ENDER_SHOT_INDEX;
+        else if (this instanceof EntityConcussiveShot) return Reference.CONCUSSIVE_SHOT_INDEX;
+        else if (this instanceof EntityBusterShot) return Reference.BUSTER_SHOT_INDEX;
+        else if (this instanceof EntitySeekerShot) return Reference.SEEKER_SHOT_INDEX;
+        else if (this instanceof EntitySandShot) return Reference.SAND_SHOT_INDEX;
+        else if (this instanceof EntityStormShot) return Reference.STORM_SHOT_INDEX;
         return 0;
     }
 
@@ -539,7 +566,7 @@ public abstract class EntityShotBase extends Entity implements IProjectile {
             case 0:
             case Reference.NEUTRAL_SHOT_INDEX:
                 return ClientReference.NEUTRAL;
-            case  Reference.EXORCISM_SHOT_INDEX:
+            case Reference.EXORCISM_SHOT_INDEX:
                 return ClientReference.EXORCISM;
             case Reference.BLAZE_SHOT_INDEX:
                 return ClientReference.BLAZE;

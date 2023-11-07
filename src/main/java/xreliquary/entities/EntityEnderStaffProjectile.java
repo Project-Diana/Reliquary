@@ -1,18 +1,22 @@
 package xreliquary.entities;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityEnderPearl;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public class EntityEnderStaffProjectile extends EntityThrowable {
+
     public int ticksInAir;
     public int ticksInGround;
     public Block inTile;
@@ -43,8 +47,7 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
         // flies slightly farther than a normal projectile;
         // stolen from the "special" snowball, altered to allow two gravity
         // options (one emulates a normal ender pearl).
-        if (this.normalGravity)
-            return super.getGravityVelocity();
+        if (this.normalGravity) return super.getGravityVelocity();
         return 0.01F;
     }
 
@@ -53,7 +56,7 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
         lastTickPosX = posX;
         lastTickPosY = posY;
         lastTickPosZ = posZ;
-        //super.onUpdate();
+        // super.onUpdate();
         onEntityUpdate();
         if (throwableShake > 0) {
             --throwableShake;
@@ -103,7 +106,10 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
 
         if (!worldObj.isRemote) {
             Entity var4 = null;
-            List var5 = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+            List var5 = worldObj.getEntitiesWithinAABBExcludingEntity(
+                this,
+                boundingBox.addCoord(motionX, motionY, motionZ)
+                    .expand(1.0D, 1.0D, 1.0D));
             double var6 = 0.0D;
             EntityLivingBase var8 = this.getThrower();
 
@@ -132,7 +138,8 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
         }
 
         if (var3 != null) {
-            if (var3.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && worldObj.getBlock(var3.blockX, var3.blockY, var3.blockZ) == Blocks.portal) {
+            if (var3.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
+                && worldObj.getBlock(var3.blockX, var3.blockY, var3.blockZ) == Blocks.portal) {
                 this.setInPortal();
             } else {
                 this.onImpact(var3);
@@ -145,7 +152,8 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
         float var17 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
 
-        for (rotationPitch = (float) (Math.atan2(motionY, var17) * 180.0D / Math.PI); rotationPitch - prevRotationPitch < -180.0F; prevRotationPitch -= 360.0F) {
+        for (rotationPitch = (float) (Math.atan2(motionY, var17) * 180.0D / Math.PI); rotationPitch - prevRotationPitch
+            < -180.0F; prevRotationPitch -= 360.0F) {
 
         }
 
@@ -178,7 +186,6 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
         this.setPosition(posX, posY, posZ);
     }
 
-
     @Override
     protected void onImpact(MovingObjectPosition mop) {
         onThrowableCollision(mop);
@@ -189,7 +196,14 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
             if (!mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 0));
         }
         for (int i = 0; i < 32; i++) {
-            worldObj.spawnParticle("portal", posX, posY + rand.nextDouble() * 2D, posZ, rand.nextGaussian(), 0.0D, rand.nextGaussian());
+            worldObj.spawnParticle(
+                "portal",
+                posX,
+                posY + rand.nextDouble() * 2D,
+                posZ,
+                rand.nextGaussian(),
+                0.0D,
+                rand.nextGaussian());
         }
 
         if (!worldObj.isRemote) {
@@ -199,7 +213,7 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
 
                 int x = (int) Math.round(posX);
                 int y = (int) Math.round(posY);
-                //apparently in transition, player gets pushed out to the void. That's no good.
+                // apparently in transition, player gets pushed out to the void. That's no good.
                 int z = (int) Math.round(posZ);
 
                 if (mop != null) {
@@ -207,7 +221,7 @@ public class EntityEnderStaffProjectile extends EntityThrowable {
 
                     y = mop.blockY + (side == 0 ? -1 : side == 1 ? 1 : 0);
                     x = mop.blockX + (side == 4 ? -1 : side == 5 ? 1 : 0);
-                    z = mop.blockZ + (side == 2  ? -1 : side == 3 ? 1 : 0);
+                    z = mop.blockZ + (side == 2 ? -1 : side == 3 ? 1 : 0);
                 }
 
                 if (y < 0) {

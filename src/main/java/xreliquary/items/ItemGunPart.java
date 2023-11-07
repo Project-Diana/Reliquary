@@ -1,19 +1,20 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 @ContentInit
 public class ItemGunPart extends ItemBase {
@@ -41,8 +42,7 @@ public class ItemGunPart extends ItemBase {
 
     @Override
     public IIcon getIconFromDamage(int meta) {
-        if (meta < 3)
-            return icons[meta];
+        if (meta < 3) return icons[meta];
         return icons[0];
     }
 

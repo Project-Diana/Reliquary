@@ -9,9 +9,11 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+
 import xreliquary.entities.ConcussiveExplosion;
 
 public class EntitySandShot extends EntityShotBase {
+
     public EntitySandShot(World par1World) {
         super(par1World);
     }
@@ -26,24 +28,28 @@ public class EntitySandShot extends EntityShotBase {
 
     @Override
     void doFiringEffects() {
-        worldObj.spawnParticle("mobSpellAmbient", posX + smallGauss(0.1D), posY + smallGauss(0.1D), posZ + smallGauss(0.1D), 0.5D, 0.5D, 0.5D);
+        worldObj.spawnParticle(
+            "mobSpellAmbient",
+            posX + smallGauss(0.1D),
+            posY + smallGauss(0.1D),
+            posZ + smallGauss(0.1D),
+            0.5D,
+            0.5D,
+            0.5D);
         worldObj.spawnParticle("flame", posX, posY, posZ, gaussian(motionX), gaussian(motionY), gaussian(motionZ));
     }
 
     @Override
     void doFlightEffects() {
-        if (ticksInAir % 3 == 0)
-            spawnHitParticles("reddust", 1);
+        if (ticksInAir % 3 == 0) spawnHitParticles("reddust", 1);
     }
 
     @Override
     void onImpact(MovingObjectPosition mop) {
         if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mop.entityHit != null) {
-            if (mop.entityHit == shootingEntity)
-                return;
-            if (!(mop.entityHit instanceof EntityLivingBase))
-                return;
-            this.onImpact((EntityLivingBase)mop.entityHit);
+            if (mop.entityHit == shootingEntity) return;
+            if (!(mop.entityHit instanceof EntityLivingBase)) return;
+            this.onImpact((EntityLivingBase) mop.entityHit);
         } else if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             this.groundImpact(mop.sideHit);
         }
@@ -79,9 +85,9 @@ public class EntitySandShot extends EntityShotBase {
             return 0;
         }
         // it also causes blinding
-        if (e instanceof EntityLiving)
-             e.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 1));
-        return (worldObj.getWorldInfo().isRaining() ? 4 : 8) + d6();
+        if (e instanceof EntityLiving) e.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 1));
+        return (worldObj.getWorldInfo()
+            .isRaining() ? 4 : 8) + d6();
     }
 
     @Override

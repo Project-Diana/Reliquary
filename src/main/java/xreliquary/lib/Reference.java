@@ -1,6 +1,7 @@
 package xreliquary.lib;
 
 public class Reference {
+
     // class for all the mod related constants
     public static final String VERSION = "1.2";
 
@@ -15,7 +16,7 @@ public class Reference {
     public static final int GRENADE_SPRITE = 12;
 
     // miscellaneous configurable things
-    //public static final int CAPACITY_UPGRADE_INCREMENT = 64;
+    // public static final int CAPACITY_UPGRADE_INCREMENT = 64;
     public static final int PESTLE_USAGE_MAX = 5; // the number of times you
     // have to use the pestle.
 
@@ -54,7 +55,7 @@ public class Reference {
     public static final String BOOK_SOUND = Reference.MOD_ID + ":book";
     public static final String GUST_SOUND = Reference.MOD_ID + ":gust";
 
-//not all of these get used but they're good to keep around.
+    // not all of these get used but they're good to keep around.
     public static final int WHITE_WOOL_META = 0;
     public static final int ORAGE_WOOL_META = 1;
     public static final int MAGENTA_WOOL_META = 2;
@@ -100,14 +101,13 @@ public class Reference {
     public static final int HANDGUN_COOLDOWN_SKILL_OFFSET = 5;
     public static final int HANDGUN_KNOCKBACK_SKILL_OFFSET = 0;
 
+    // Packet ID Section for identifying packet types, now deprecated.
+    // public static final int RECOIL_PACKET_ID = 0;
+    // public static final int RECOIL_COMPENSATION_PACKET_ID = 1;
+    // public static final int RELOAD_PACKET_ID = 0;
+    // public static final int RELOAD_COMPENSATION_PACKET_ID = 1;
 
-    //Packet ID Section for identifying packet types, now deprecated.
-//    public static final int RECOIL_PACKET_ID = 0;
-//    public static final int RECOIL_COMPENSATION_PACKET_ID = 1;
-//    public static final int RELOAD_PACKET_ID = 0;
-//    public static final int RELOAD_COMPENSATION_PACKET_ID = 1;
-
-    //Shot Type Indexes
+    // Shot Type Indexes
     public static final int NEUTRAL_SHOT_INDEX = 1;
     public static final int EXORCISM_SHOT_INDEX = 2;
     public static final int BLAZE_SHOT_INDEX = 3;
@@ -118,7 +118,7 @@ public class Reference {
     public static final int SAND_SHOT_INDEX = 8;
     public static final int STORM_SHOT_INDEX = 9;
 
-    //minecraft under-the-hood potion names
+    // minecraft under-the-hood potion names
     public static final String INVIS = "invisibility";
     public static final String ABSORB = "absorption";
     public static final String HBOOST = "healthBoost";

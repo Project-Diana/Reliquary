@@ -1,12 +1,13 @@
 package lib.enderwizards.sandstone.mod.config;
 
-import cpw.mods.fml.client.config.IConfigElement;
-import org.github.trainerguy22.jtoml.impl.Toml;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import org.github.trainerguy22.jtoml.impl.Toml;
+
+import cpw.mods.fml.client.config.IConfigElement;
 
 public abstract class Config {
 

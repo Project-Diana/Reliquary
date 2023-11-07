@@ -1,10 +1,8 @@
 package xreliquary.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.blocks.ICustomItemBlock;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.util.ContentHelper;
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.IGrowable;
@@ -21,13 +19,16 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.blocks.ICustomItemBlock;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.util.ContentHelper;
 import xreliquary.Reliquary;
 import xreliquary.items.block.ItemFertileLilypad;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
-import java.util.Random;
 
 @ContentInit
 public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock {
@@ -62,7 +63,14 @@ public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock
 
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
-        world.spawnParticle("mobSpell", x + 0.5D + rand.nextGaussian() / 8, y, z + 0.5D + rand.nextGaussian() / 8, 0.0D, 0.9D, 0.5D);
+        world.spawnParticle(
+            "mobSpell",
+            x + 0.5D + rand.nextGaussian() / 8,
+            y,
+            z + 0.5D + rand.nextGaussian() / 8,
+            0.0D,
+            0.9D,
+            0.5D);
     }
 
     private int secondsBetweenGrowthTicks() {
@@ -85,7 +93,7 @@ public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock
                     int y = yO + yD;
                     int z = zO + zD;
 
-                    double distance = Math.sqrt(Math.pow(x-xO, 2) + Math.pow(y - yO,2) + Math.pow(z - zO,2));
+                    double distance = Math.sqrt(Math.pow(x - xO, 2) + Math.pow(y - yO, 2) + Math.pow(z - zO, 2));
                     distance -= fullPotencyRange();
                     distance = Math.min(1D, distance);
                     double distanceCoefficient = 1D - (distance / tileRange());
@@ -94,8 +102,13 @@ public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock
 
                     if (block instanceof IPlantable || block instanceof IGrowable) {
                         if (!(block instanceof BlockFertileLilypad)) {
-                            //it schedules the next tick.
-                            world.scheduleBlockUpdate(x, y, z, block, (int) (distanceCoefficient * (float) secondsBetweenGrowthTicks() * 20F));
+                            // it schedules the next tick.
+                            world.scheduleBlockUpdate(
+                                x,
+                                y,
+                                z,
+                                block,
+                                (int) (distanceCoefficient * (float) secondsBetweenGrowthTicks() * 20F));
                             block.updateTick(world, x, y, z, world.rand);
                         }
                     }
@@ -111,7 +124,8 @@ public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock
     }
 
     @Override
-    public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
+    public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB,
+        List par6List, Entity par7Entity) {
         if (par7Entity == null || !(par7Entity instanceof EntityBoat)) {
             super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
         }
@@ -119,7 +133,8 @@ public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
-        return AxisAlignedBB.getBoundingBox(par2 + minX, par3 + minY, par4 + minZ, par2 + maxX, par3 + maxY, par4 + maxZ);
+        return AxisAlignedBB
+            .getBoundingBox(par2 + minX, par3 + minY, par4 + minZ, par2 + maxX, par3 + maxY, par4 + maxZ);
 
     }
 
@@ -130,7 +145,10 @@ public class BlockFertileLilypad extends BlockFlower implements ICustomItemBlock
 
     @Override
     public boolean canBlockStay(World world, int x, int y, int z) {
-        return y >= 0 && y < 256 && world.getBlock(x, y - 1, z).getMaterial() == Material.water && world.getBlockMetadata(x, y - 1, z) == 0;
+        return y >= 0 && y < 256
+            && world.getBlock(x, y - 1, z)
+                .getMaterial() == Material.water
+            && world.getBlockMetadata(x, y - 1, z) == 0;
     }
 
     @SideOnly(Side.CLIENT)

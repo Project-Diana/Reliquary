@@ -1,7 +1,8 @@
 package lib.enderwizards.sandstone.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import java.util.ArrayList;
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemMultiple extends ItemBase {
 
@@ -44,10 +45,8 @@ public class ItemMultiple extends ItemBase {
     private static SubItem[] buildSubItems(Object[] items) {
         List<SubItem> newItems = new ArrayList<SubItem>();
         for (Object item : items) {
-            if (item instanceof String)
-                newItems.add(new SubItem((String) item));
-            if (item instanceof SubItem)
-                newItems.add((SubItem) item);
+            if (item instanceof String) newItems.add(new SubItem((String) item));
+            if (item instanceof SubItem) newItems.add((SubItem) item);
         }
         return newItems.toArray(new SubItem[newItems.size()]);
     }

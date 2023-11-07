@@ -1,32 +1,34 @@
 package xreliquary.items;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.util.LanguageHelper;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.DamageSource;
+
 import org.lwjgl.input.Keyboard;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.util.LanguageHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 @ContentInit
 public class ItemMercyCross extends ItemSword {
@@ -44,7 +46,12 @@ public class ItemMercyCross extends ItemSword {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
 
-        itemIcon = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
+        itemIcon = iconRegister.registerIcon(
+            Reference.MOD_ID.toLowerCase() + ":"
+                + this.getUnlocalizedName()
+                    .substring(
+                        this.getUnlocalizedName()
+                            .indexOf(".") + 1));
     }
 
     @Override
@@ -55,12 +62,10 @@ public class ItemMercyCross extends ItemSword {
 
     @Override
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List list, boolean par4) {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-            return;
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) return;
         String value = LanguageHelper.getLocalization("item." + Names.mercy_cross + ".tooltip");
         for (String descriptionLine : value.split(";")) {
-            if (descriptionLine != null && descriptionLine.length() > 0)
-                list.add(descriptionLine);
+            if (descriptionLine != null && descriptionLine.length() > 0) list.add(descriptionLine);
         }
     }
 
@@ -85,15 +90,24 @@ public class ItemMercyCross extends ItemSword {
     @Override
     public Multimap getItemAttributeModifiers() {
         Multimap multimap = HashMultimap.create();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", (double) 0, 0));
+        multimap.put(
+            SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),
+            new AttributeModifier(field_111210_e, "Weapon modifier", (double) 0, 0));
         return multimap;
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity monster) {
         if (monster instanceof EntityLiving) {
-            if (isUndead((EntityLiving)monster)) {
-                monster.worldObj.spawnParticle("largeexplode", monster.posX + (itemRand.nextFloat() - 0.5F), monster.posY + (itemRand.nextFloat() - 0.5F) + (monster.height / 2), monster.posZ + (itemRand.nextFloat() - 0.5F), 0.0F, 0.0F, 0.0F);
+            if (isUndead((EntityLiving) monster)) {
+                monster.worldObj.spawnParticle(
+                    "largeexplode",
+                    monster.posX + (itemRand.nextFloat() - 0.5F),
+                    monster.posY + (itemRand.nextFloat() - 0.5F) + (monster.height / 2),
+                    monster.posZ + (itemRand.nextFloat() - 0.5F),
+                    0.0F,
+                    0.0F,
+                    0.0F);
             }
         }
         return super.onLeftClickEntity(stack, player, monster);

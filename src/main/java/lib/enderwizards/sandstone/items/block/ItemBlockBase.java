@@ -1,16 +1,19 @@
 package lib.enderwizards.sandstone.items.block;
 
-import com.google.common.collect.ImmutableMap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.util.LanguageHelper;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+
 import org.lwjgl.input.Keyboard;
 
-import java.util.List;
+import com.google.common.collect.ImmutableMap;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.util.LanguageHelper;
 
 /**
  * ItemBlockBase, a helper class for item blocks. Handles language names and language
@@ -22,8 +25,10 @@ import java.util.List;
  */
 public class ItemBlockBase extends ItemBlock {
 
-    //defaults to only showing the tooltip when shift is pressed. you can override this behavior at the item level by setting the item's showTooltipsAlways bool to true.
+    // defaults to only showing the tooltip when shift is pressed. you can override this behavior at the item level by
+    // setting the item's showTooltipsAlways bool to true.
     private boolean showTooltipsAlways = false;
+
     public ItemBlockBase(Block block) {
         super(block);
     }
@@ -50,9 +55,9 @@ public class ItemBlockBase extends ItemBlock {
      */
     public void formatTooltip(ImmutableMap<String, String> toFormat, ItemStack stack, List list) {
         if (showTooltipsAlways() || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-            LanguageHelper.formatTooltip(this.getUnlocalizedNameInefficiently(stack) + ".tooltip", toFormat, stack, list);
+            LanguageHelper
+                .formatTooltip(this.getUnlocalizedNameInefficiently(stack) + ".tooltip", toFormat, stack, list);
     }
-
 
     @Override
     @SideOnly(Side.CLIENT)

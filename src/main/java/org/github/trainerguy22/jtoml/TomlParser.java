@@ -5,13 +5,18 @@ import java.util.Map;
 /**
  * Toml Parser interface.
  * <p/>
- * <p>Every parser should implement that interface.</p>
+ * <p>
+ * Every parser should implement that interface.
+ * </p>
  * <p/>
- * <p>See: The <a href="https://github.com/mojombo/toml">TOML GitHub</a> project for more information about it.</p>
+ * <p>
+ * See: The <a href="https://github.com/mojombo/toml">TOML GitHub</a> project for more information about it.
+ * </p>
  *
  * @author <a href="a.grison@gmail.com">$Author: Alexandre Grison$</a>
  */
 public interface TomlParser {
+
     /**
      * Parses the given TOML String.
      *

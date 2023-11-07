@@ -1,13 +1,15 @@
 package xreliquary.entities.potion;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class EntityAttractionPotion extends EntityThrownPotion {
+
     public EntityAttractionPotion(World par1World) {
         super(par1World);
     }
@@ -37,17 +39,22 @@ public class EntityAttractionPotion extends EntityThrownPotion {
 
     @Override
     void doLivingSplashEffect(EntityLivingBase el) {
-        if (!(el instanceof EntityAnimal))
-            return;
+        if (!(el instanceof EntityAnimal)) return;
         EntityAnimal e = (EntityAnimal) el;
-        if (e == null || e.getGrowingAge() != 0 || !(this.getThrower() instanceof EntityPlayer))
-            return;
+        if (e == null || e.getGrowingAge() != 0 || !(this.getThrower() instanceof EntityPlayer)) return;
         e.func_146082_f((EntityPlayer) this.getThrower());
         for (int var3 = 0; var3 < 7; ++var3) {
             double var4 = rand.nextGaussian() * 0.02D;
             double var6 = rand.nextGaussian() * 0.02D;
             double var8 = rand.nextGaussian() * 0.02D;
-            worldObj.spawnParticle("heart", e.posX + rand.nextFloat() * e.width * 2.0F - e.width, e.posY + 0.5D + rand.nextFloat() * e.height, e.posZ + rand.nextFloat() * e.width * 2.0F - e.width, var4, var6, var8);
+            worldObj.spawnParticle(
+                "heart",
+                e.posX + rand.nextFloat() * e.width * 2.0F - e.width,
+                e.posY + 0.5D + rand.nextFloat() * e.height,
+                e.posZ + rand.nextFloat() * e.width * 2.0F - e.width,
+                var4,
+                var6,
+                var8);
         }
     }
 

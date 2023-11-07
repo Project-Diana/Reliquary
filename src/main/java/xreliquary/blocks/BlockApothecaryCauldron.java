@@ -1,9 +1,8 @@
 package xreliquary.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.blocks.BlockBase;
-import lib.enderwizards.sandstone.init.ContentInit;
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -22,14 +21,16 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.blocks.BlockBase;
+import lib.enderwizards.sandstone.init.ContentInit;
 import xreliquary.Reliquary;
 import xreliquary.blocks.tile.TileEntityCauldron;
 import xreliquary.client.render.RenderApothecaryCauldron;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
-import java.util.Random;
 
 @ContentInit
 public class BlockApothecaryCauldron extends BlockBase {
@@ -63,15 +64,19 @@ public class BlockApothecaryCauldron extends BlockBase {
 
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
-        this.innerTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_" + "inner");
-        this.insideTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_" + "inside");
+        this.innerTexture = iconRegister
+            .registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_" + "inner");
+        this.insideTexture = iconRegister
+            .registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_" + "inside");
         this.topTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_top");
-        this.bottomTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_" + "bottom");
+        this.bottomTexture = iconRegister
+            .registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_" + "bottom");
         this.blockIcon = iconRegister.registerIcon(Reference.MOD_ID + ":" + Names.apothecary_cauldron + "_side");
         this.waterTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Names.cauldron_water);
     }
 
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List cbList, Entity collisionEntity) {
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List cbList,
+        Entity collisionEntity) {
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.3125F, 1.0F);
         super.addCollisionBoxesToList(world, x, y, z, aabb, cbList, collisionEntity);
         float f = 0.125F;
@@ -89,8 +94,11 @@ public class BlockApothecaryCauldron extends BlockBase {
     // called by the renderer to get the texture in a static method.
     @SideOnly(Side.CLIENT)
     public static IIcon getCauldronIcon(String textureName) {
-        BlockApothecaryCauldron cauldronStatic = (BlockApothecaryCauldron) Reliquary.CONTENT.getBlock(Names.apothecary_cauldron);
-        return textureName.equals("inner") ? cauldronStatic.innerTexture : (textureName.equals("bottom") ? cauldronStatic.bottomTexture : textureName.equals("inside") ? cauldronStatic.insideTexture : null);
+        BlockApothecaryCauldron cauldronStatic = (BlockApothecaryCauldron) Reliquary.CONTENT
+            .getBlock(Names.apothecary_cauldron);
+        return textureName.equals("inner") ? cauldronStatic.innerTexture
+            : (textureName.equals("bottom") ? cauldronStatic.bottomTexture
+                : textureName.equals("inside") ? cauldronStatic.insideTexture : null);
     }
 
     /**
@@ -132,51 +140,49 @@ public class BlockApothecaryCauldron extends BlockBase {
         int l = world.getBlockMetadata(x, y, z);
         float f = (float) y + (6.0F + (float) (3 * l)) / 16.0F;
 
-        TileEntityCauldron cauldron = (TileEntityCauldron)world.getTileEntity(x, y, z);
+        TileEntityCauldron cauldron = (TileEntityCauldron) world.getTileEntity(x, y, z);
         if (!world.isRemote && collidingEntity.boundingBox.minY <= (double) f) {
             if (collidingEntity.isBurning() && l > 0) {
                 collidingEntity.extinguish();
-                //this.setMetaData(world, x, y, z, l - 1);
+                // this.setMetaData(world, x, y, z, l - 1);
             }
             if (collidingEntity instanceof EntityLivingBase) {
-                if (cauldron == null || cauldron.potionEssence == null)
-                    return;
+                if (cauldron == null || cauldron.potionEssence == null) return;
                 for (PotionEffect effect : cauldron.potionEssence.getEffects()) {
                     Potion potion = Potion.potionTypes[effect.getPotionID()];
-                    if (potion.isInstant() && world.getWorldTime() % 20 != 0)
-                        continue;
-                    PotionEffect reducedEffect = new PotionEffect(effect.getPotionID(), potion.isInstant() ? 1 : effect.getDuration() / 20, Math.max(0, effect.getAmplifier() - 1));
+                    if (potion.isInstant() && world.getWorldTime() % 20 != 0) continue;
+                    PotionEffect reducedEffect = new PotionEffect(
+                        effect.getPotionID(),
+                        potion.isInstant() ? 1 : effect.getDuration() / 20,
+                        Math.max(0, effect.getAmplifier() - 1));
                     ((EntityLivingBase) collidingEntity).addPotionEffect(reducedEffect);
                 }
                 if (cauldron.cookTime > 0 && world.getWorldTime() % 20 != 0) {
                     collidingEntity.attackEntityFrom(DamageSource.inFire, 1.0F);
                 }
             }
-        
 
             if (collidingEntity instanceof EntityItem) {
                 ItemStack item = ((EntityItem) collidingEntity).getEntityItem();
                 while (cauldron.isItemValidForInput(item)) {
-                    
+
                     cauldron.addItem(item);
-                    if (--item.stackSize < 1)
-                        collidingEntity.setDead();
+                    if (--item.stackSize < 1) collidingEntity.setDead();
                 }
             }
         }
     }
 
-
-
     /**
      * Called upon block activation (right click on the block.)
      */
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metaMaybe, float playerX, float playerY, float playerZ) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metaMaybe, float playerX,
+        float playerY, float playerZ) {
         if (world.isRemote) {
             return true;
         } else {
             ItemStack itemstack = player.inventory.getCurrentItem();
-            TileEntityCauldron cauldron = (TileEntityCauldron)world.getTileEntity(x, y, z);
+            TileEntityCauldron cauldron = (TileEntityCauldron) world.getTileEntity(x, y, z);
 
             if (itemstack == null) {
                 return true;
@@ -186,7 +192,8 @@ public class BlockApothecaryCauldron extends BlockBase {
                 if (itemstack.getItem() == Items.water_bucket) {
                     if (j1 < 3) {
                         if (!player.capabilities.isCreativeMode) {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.bucket));
+                            player.inventory
+                                .setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.bucket));
                         }
 
                         this.setMetaData(world, x, y, z, 3);
@@ -195,7 +202,9 @@ public class BlockApothecaryCauldron extends BlockBase {
 
                     return true;
                 } else {
-                    if (itemstack.getItem() == Reliquary.CONTENT.getItem(Names.potion) && (itemstack.getTagCompound() == null || !itemstack.getTagCompound().getBoolean("hasPotion"))) {
+                    if (itemstack.getItem() == Reliquary.CONTENT.getItem(Names.potion)
+                        && (itemstack.getTagCompound() == null || !itemstack.getTagCompound()
+                            .getBoolean("hasPotion"))) {
                         if (j1 > 0) {
 
                             if (cauldron.finishedCooking()) {
@@ -207,7 +216,13 @@ public class BlockApothecaryCauldron extends BlockBase {
                                 if (itemstack.stackSize <= 0) {
                                     player.inventory.setInventorySlotContents(player.inventory.currentItem, potion);
                                 } else if (!player.inventory.addItemStackToInventory(potion)) {
-                                    world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5D, (double) y + 1.5D, (double) z + 0.5D, potion));
+                                    world.spawnEntityInWorld(
+                                        new EntityItem(
+                                            world,
+                                            (double) x + 0.5D,
+                                            (double) y + 1.5D,
+                                            (double) z + 0.5D,
+                                            potion));
                                 }
 
                                 this.setMetaData(world, x, y, z, j1 - 1);

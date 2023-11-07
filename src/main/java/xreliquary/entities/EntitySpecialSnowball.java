@@ -1,18 +1,22 @@
 package xreliquary.entities;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import xreliquary.Reliquary;
-import xreliquary.items.ItemGlacialStaff;
-import xreliquary.lib.Names;
 
-import java.util.List;
+import xreliquary.Reliquary;
+import xreliquary.lib.Names;
 
 public class EntitySpecialSnowball extends EntitySnowball {
 
@@ -43,9 +47,19 @@ public class EntitySpecialSnowball extends EntitySnowball {
         return 1.2F;
     }
 
-    public int getSnowballDamage() { return Reliquary.CONFIG.getInt(fromGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_damage"); }
-    public int getSnowballDamageFireImmuneBonus() { return Reliquary.CONFIG.getInt(fromGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_damage_bonus_fire_immune"); }
-    public int getSnowballDamageBlazeBonus() { return Reliquary.CONFIG.getInt(fromGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_damage_bonus_blaze"); }
+    public int getSnowballDamage() {
+        return Reliquary.CONFIG.getInt(fromGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_damage");
+    }
+
+    public int getSnowballDamageFireImmuneBonus() {
+        return Reliquary.CONFIG
+            .getInt(fromGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_damage_bonus_fire_immune");
+    }
+
+    public int getSnowballDamageBlazeBonus() {
+        return Reliquary.CONFIG
+            .getInt(fromGlacialStaff ? Names.glacial_staff : Names.ice_magus_rod, "snowball_damage_bonus_blaze");
+    }
 
     /**
      * Called when this EntityThrowable hits a block or entity.
@@ -54,8 +68,7 @@ public class EntitySpecialSnowball extends EntitySnowball {
     protected void onImpact(MovingObjectPosition objPos) {
         if (objPos.entityHit != null) {
             int damage = getSnowballDamage();
-            if (objPos.entityHit.isImmuneToFire())
-                damage += getSnowballDamageFireImmuneBonus();
+            if (objPos.entityHit.isImmuneToFire()) damage += getSnowballDamageFireImmuneBonus();
             if (objPos.entityHit instanceof EntityBlaze) {
                 damage += getSnowballDamageBlazeBonus();
             }
@@ -63,8 +76,15 @@ public class EntitySpecialSnowball extends EntitySnowball {
             objPos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
         }
 
-        if (objPos.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && worldObj.getBlock(objPos.blockX, objPos.blockY + 1, objPos.blockZ) == Blocks.fire) {
-            worldObj.playSoundEffect((double) objPos.blockX + 0.5D, ((double) objPos.blockY + 1) + 0.5D, (double) objPos.blockZ + 0.5D, "random.fizz", 0.5F, (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+        if (objPos.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
+            && worldObj.getBlock(objPos.blockX, objPos.blockY + 1, objPos.blockZ) == Blocks.fire) {
+            worldObj.playSoundEffect(
+                (double) objPos.blockX + 0.5D,
+                ((double) objPos.blockY + 1) + 0.5D,
+                (double) objPos.blockZ + 0.5D,
+                "random.fizz",
+                0.5F,
+                (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
             worldObj.setBlock(objPos.blockX, objPos.blockY + 1, objPos.blockZ, Blocks.air);
         }
 
@@ -133,7 +153,10 @@ public class EntitySpecialSnowball extends EntitySnowball {
 
         if (!worldObj.isRemote) {
             Entity var4 = null;
-            List var5 = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+            List var5 = worldObj.getEntitiesWithinAABBExcludingEntity(
+                this,
+                boundingBox.addCoord(motionX, motionY, motionZ)
+                    .expand(1.0D, 1.0D, 1.0D));
             double var6 = 0.0D;
             EntityLivingBase var8 = this.getThrower();
 
@@ -162,7 +185,8 @@ public class EntitySpecialSnowball extends EntitySnowball {
         }
 
         if (var3 != null) {
-            if (var3.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && worldObj.getBlock(var3.blockX, var3.blockY, var3.blockZ) == Blocks.portal) {
+            if (var3.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
+                && worldObj.getBlock(var3.blockX, var3.blockY, var3.blockZ) == Blocks.portal) {
                 this.setInPortal();
             } else {
                 this.onImpact(var3);
@@ -175,7 +199,8 @@ public class EntitySpecialSnowball extends EntitySnowball {
         float var17 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
 
-        for (rotationPitch = (float) (Math.atan2(motionY, var17) * 180.0D / Math.PI); rotationPitch - prevRotationPitch < -180.0F; prevRotationPitch -= 360.0F) {
+        for (rotationPitch = (float) (Math.atan2(motionY, var17) * 180.0D / Math.PI); rotationPitch - prevRotationPitch
+            < -180.0F; prevRotationPitch -= 360.0F) {
 
         }
 
@@ -199,7 +224,14 @@ public class EntitySpecialSnowball extends EntitySnowball {
         if (this.isInWater()) {
             for (int var7 = 0; var7 < 4; ++var7) {
                 float var20 = 0.25F;
-                worldObj.spawnParticle("bubble", posX - motionX * var20, posY - motionY * var20, posZ - motionZ * var20, motionX, motionY, motionZ);
+                worldObj.spawnParticle(
+                    "bubble",
+                    posX - motionX * var20,
+                    posY - motionY * var20,
+                    posZ - motionZ * var20,
+                    motionX,
+                    motionY,
+                    motionZ);
             }
 
             var18 = 0.8F;

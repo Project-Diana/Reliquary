@@ -1,9 +1,7 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.util.LanguageHelper;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,12 +14,16 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+
 import org.lwjgl.input.Keyboard;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.util.LanguageHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 @ContentInit
 public class ItemMagicbane extends ItemSword {
@@ -38,7 +40,12 @@ public class ItemMagicbane extends ItemSword {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
-        itemIcon = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
+        itemIcon = iconRegister.registerIcon(
+            Reference.MOD_ID.toLowerCase() + ":"
+                + this.getUnlocalizedName()
+                    .substring(
+                        this.getUnlocalizedName()
+                            .indexOf(".") + 1));
     }
 
     @Override
@@ -55,12 +62,10 @@ public class ItemMagicbane extends ItemSword {
 
     @Override
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List list, boolean par4) {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-            return;
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && !Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) return;
         String value = LanguageHelper.getLocalization("item." + Names.magicbane + ".tooltip");
         for (String descriptionLine : value.split(";")) {
-            if (descriptionLine != null && descriptionLine.length() > 0)
-                list.add(descriptionLine);
+            if (descriptionLine != null && descriptionLine.length() > 0) list.add(descriptionLine);
         }
     }
 
@@ -117,7 +122,8 @@ public class ItemMagicbane extends ItemSword {
             int bonus = 0;
             if (enchants != null) {
                 for (int enchant = 0; enchant < enchants.tagCount(); enchant++) {
-                    bonus += enchants.getCompoundTagAt(enchant).getShort("lvl");
+                    bonus += enchants.getCompoundTagAt(enchant)
+                        .getShort("lvl");
                 }
             }
             e.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) par3EntityLivingBase), bonus + 4);

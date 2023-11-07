@@ -1,20 +1,21 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Colors;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 @ContentInit
 public class ItemBullet extends ItemBase {
@@ -49,22 +50,17 @@ public class ItemBullet extends ItemBase {
 
     @Override
     public IIcon getIcon(ItemStack itemStack, int renderPass) {
-        if (itemStack.getItemDamage() == 0)
-            return this.itemIcon;
-        if (renderPass != 1)
-            return this.itemIcon;
-        else
-            return iconOverlay;
+        if (itemStack.getItemDamage() == 0) return this.itemIcon;
+        if (renderPass != 1) return this.itemIcon;
+        else return iconOverlay;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
 
-        if (renderPass == 1)
-            return getColor(itemStack);
-        else
-            return Integer.parseInt(Colors.PURE, 16);
+        if (renderPass == 1) return getColor(itemStack);
+        else return Integer.parseInt(Colors.PURE, 16);
     }
 
     public int getColor(ItemStack itemStack) {

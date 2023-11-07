@@ -5,7 +5,18 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Toml Utilities.
@@ -13,14 +24,24 @@ import java.util.*;
  * @author <a href="mailto:a.grison@gmail.com">$Author: Alexandre Grison$</a>
  */
 public class Util {
+
     /**
-     * <p>Helper class for handling ISO 8601 strings of the following format:</p>
-     * <p>"2008-03-01T13:00:00+01:00". It also supports parsing the "Z" timezone.</p>
+     * <p>
+     * Helper class for handling ISO 8601 strings of the following format:
+     * </p>
+     * <p>
+     * "2008-03-01T13:00:00+01:00". It also supports parsing the "Z" timezone.
+     * </p>
      * <p/>
-     * <p>Author: <a href="http://stackoverflow.com/users/1010931/wrygiel">wrigiel</a></p>
-     * <p>Taken from: http://stackoverflow.com/questions/2201925/converting-iso8601-compliant-string-to-java-util-date</p>
+     * <p>
+     * Author: <a href="http://stackoverflow.com/users/1010931/wrygiel">wrigiel</a>
+     * </p>
+     * <p>
+     * Taken from: http://stackoverflow.com/questions/2201925/converting-iso8601-compliant-string-to-java-util-date
+     * </p>
      */
     public static class ISO8601 {
+
         /**
          * Transform ISO 8601 string to Calendar.
          */
@@ -53,15 +74,19 @@ public class Util {
      * Note: This is to avoid dependency on Apache commons for such limited features.
      */
     public static class TomlString {
+
         private static Map<Character, Character> ESCAPE = new HashMap<Character, Character>();
-        private static Map<Character, Character> UNESCAPE = new HashMap<Character, Character>() {{
-            put('0', '\u0000');
-            put('t', '\t');
-            put('n', '\n');
-            put('r', '\r');
-            put('\\', '\\');
-            put('"', '"');
-        }};
+        private static Map<Character, Character> UNESCAPE = new HashMap<Character, Character>() {
+
+            {
+                put('0', '\u0000');
+                put('t', '\t');
+                put('n', '\n');
+                put('r', '\r');
+                put('\\', '\\');
+                put('"', '"');
+            }
+        };
 
         static {
             for (Map.Entry<Character, Character> e : UNESCAPE.entrySet()) {
@@ -71,7 +96,8 @@ public class Util {
 
         /**
          * Unescape a list of literals found in the given String.
-         * It will replace characters (<code>'\' + 't'</code>, <code>'\' + 'n'</code>, ...) to there equivalent (<code>'\t'</code>, <code>'\n'</code>).
+         * It will replace characters (<code>'\' + 't'</code>, <code>'\' + 'n'</code>, ...) to there equivalent
+         * (<code>'\t'</code>, <code>'\n'</code>).
          * <p/>
          * <ul>
          * <li><code>'\'</code> + <code>'0'</code> -> <code>'\0'</code> null character (0x00)</li>
@@ -99,15 +125,16 @@ public class Util {
                     if (UNESCAPE.containsKey(ch)) {
                         buffer.append(UNESCAPE.get(ch));
                     } else if (ch == 'u') {
-                        String unicodeHexValue = String.valueOf(input.charAt(++i)) + String.valueOf(input.charAt(++i)) +
-                                String.valueOf(input.charAt(++i)) + String.valueOf(input.charAt(++i));
+                        String unicodeHexValue = String.valueOf(input.charAt(++i)) + String.valueOf(input.charAt(++i))
+                            + String.valueOf(input.charAt(++i))
+                            + String.valueOf(input.charAt(++i));
                         if (unicodeHexValue.matches("[0-9a-fA-F]{4}")) {
                             buffer.append((char) Integer.parseInt(unicodeHexValue, 16));
                         }
                     } else {
                         throw new IllegalArgumentException("Escape sequence \\ " + ch + " in isn't known. " + //
-                                "Known sequences are: " + "\\0, \\t, \\n, \\b, \\r, \\\\, \\\".\n" + //
-                                "Offending string: " + input + "\n" + "                 " + createWhitespaceString(i) + "^");
+                        "Known sequences are: " + "\\0, \\t, \\n, \\b, \\r, \\\\, \\\".\n" + //
+                        "Offending string: " + input + "\n" + "                 " + createWhitespaceString(i) + "^");
                     }
                 }
             }
@@ -116,14 +143,15 @@ public class Util {
 
         /**
          * Escapes a list of literals found in the given String.
-         * It will replace characters (<code>'\t'</code>, <code>'\n'</code>, ...) to there equivalent (<code>'\' + 't'</code>, <code>'\' + 'n'</code>).
+         * It will replace characters (<code>'\t'</code>, <code>'\n'</code>, ...) to there equivalent
+         * (<code>'\' + 't'</code>, <code>'\' + 'n'</code>).
          * <p/>
          * <ul>
          * <li><code>'\0'</code> null character (0x00) -> <code>'\'</code> + <code>'0'</code></li>
          * <li><code>'\t'</code> tab character (0x09) -> <code>'\'</code> + <code>'t'</code></li>
          * <li><code>'\n'</code> newline character (0x0a) -> <code>'\'</code> + <code>'n'</code></li>
          * <li><code>'\r'</code> carriage return character (0x0d) -> <code>'\'</code> + <code>'r'</code></li>
-         * <li><code>'\"'</code> quote character (0x22) -> <code>'\'</code> + <code>'"'</code> </li>
+         * <li><code>'\"'</code> quote character (0x22) -> <code>'\'</code> + <code>'"'</code></li>
          * <li><code>'\\'</code> backslash character (0x5c) -> <code>'\'</code> + <code>'\'</code></li>
          * </ul>
          *
@@ -135,9 +163,11 @@ public class Util {
             for (int i = 0; i < input.length(); i++) {
                 char ch = input.charAt(i);
                 if (ESCAPE.containsKey(ch)) {
-                    buffer.append("\\").append(ESCAPE.get(ch));
+                    buffer.append("\\")
+                        .append(ESCAPE.get(ch));
                 } else if ((ch >= 0x00 && ch < 0x20 /* SPACE */) || (ch >= 0x7F /* DEL and above */)) {
-                    buffer.append("\\u").append(Integer.toHexString(ch));
+                    buffer.append("\\u")
+                        .append(Integer.toHexString(ch));
                 } else {
                     buffer.append(ch);
                 }
@@ -185,9 +215,11 @@ public class Util {
      * Note: This is to avoid dependency on Apache commons for such limited features.
      */
     public static class FileToString {
+
         public static String read(File file) throws FileNotFoundException {
             try {
-                return new Scanner(file).useDelimiter("\\Z").next();
+                return new Scanner(file).useDelimiter("\\Z")
+                    .next();
             } catch (NoSuchElementException e) {
                 return "";
             }
@@ -198,16 +230,26 @@ public class Util {
      * Utilities around Reflection.
      */
     public static class Reflection {
+
         /**
          * List of types supported Natively by TOML + Map
          */
-        static final Set<Class<?>> TOML_SUPPORTED = new HashSet<Class<?>>(Arrays.asList(
-                int.class, Integer.class, //
-                long.class, Long.class, //
-                double.class, Double.class, //
+        static final Set<Class<?>> TOML_SUPPORTED = new HashSet<Class<?>>(
+            Arrays.asList(
+                int.class,
+                Integer.class, //
+                long.class,
+                Long.class, //
+                double.class,
+                Double.class, //
                 Calendar.class, //
-                char.class, char[].class,
-                boolean.class, Boolean.class, String.class, List.class, Map.class));
+                char.class,
+                char[].class,
+                boolean.class,
+                Boolean.class,
+                String.class,
+                List.class,
+                Map.class));
 
         /**
          * Returns whether the given type is a built-in toml supported type.
@@ -272,6 +314,7 @@ public class Util {
      * </ul>
      */
     public static class TomlFieldComparator implements Comparator<Field> {
+
         List<Field> originalFields;
 
         public TomlFieldComparator(List<Field> fields) {
@@ -288,7 +331,8 @@ public class Util {
             boolean o2Supported = Reflection.isTomlSupportedTypeExceptMap(field2.getType());
             // if built-in types or both complex types, keep original ordering
             if ((o1Supported && o2Supported) || (!o1Supported && !o2Supported)) {
-                return Integer.valueOf(originalFields.indexOf(field1)).compareTo(originalFields.indexOf(field2));
+                return Integer.valueOf(originalFields.indexOf(field1))
+                    .compareTo(originalFields.indexOf(field2));
             } else { // put complex types at the end
                 return o1Supported ? -1 : 1;
             }

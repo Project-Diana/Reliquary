@@ -1,22 +1,23 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
-import lib.enderwizards.sandstone.util.LanguageHelper;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
+import lib.enderwizards.sandstone.util.LanguageHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Colors;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 @ContentInit
 public class ItemMagazine extends ItemBase {
@@ -47,19 +48,15 @@ public class ItemMagazine extends ItemBase {
 
     @Override
     public IIcon getIcon(ItemStack itemStack, int renderPass) {
-        if (itemStack.getItemDamage() == 0 || renderPass != 1)
-            return this.itemIcon;
-        else
-            return iconOverlay;
+        if (itemStack.getItemDamage() == 0 || renderPass != 1) return this.itemIcon;
+        else return iconOverlay;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
-        if (itemStack.getItemDamage() == 0 || renderPass != 1)
-            return Integer.parseInt(Colors.DARKER, 16);
-        else
-            return getColor(itemStack);
+        if (itemStack.getItemDamage() == 0 || renderPass != 1) return Integer.parseInt(Colors.DARKER, 16);
+        else return getColor(itemStack);
     }
 
     public int getColor(ItemStack itemStack) {
@@ -90,7 +87,8 @@ public class ItemMagazine extends ItemBase {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer par2EntityPlayer, List list, boolean par4) {
         if (stack.getItemDamage() < 2) {
-            //list.add(LanguageHelper.getLocalization("item." + Names.magazine + "_" + stack.getItemDamage() + ".tooltip"));
+            // list.add(LanguageHelper.getLocalization("item." + Names.magazine + "_" + stack.getItemDamage() +
+            // ".tooltip"));
         } else {
             list.add(LanguageHelper.getLocalization("item." + Names.bullet + "_" + stack.getItemDamage() + ".tooltip"));
         }

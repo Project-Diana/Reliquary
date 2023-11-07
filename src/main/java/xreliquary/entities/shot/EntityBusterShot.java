@@ -4,9 +4,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+
 import xreliquary.entities.ConcussiveExplosion;
 
 public class EntityBusterShot extends EntityShotBase {
+
     public EntityBusterShot(World par1World) {
         super(par1World);
     }
@@ -22,13 +24,10 @@ public class EntityBusterShot extends EntityShotBase {
     @Override
     void onImpact(MovingObjectPosition mop) {
         if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mop.entityHit != null) {
-            if (mop.entityHit == shootingEntity)
-                return;
-            if (!(mop.entityHit instanceof EntityLivingBase))
-                return;
-            this.onImpact((EntityLivingBase)mop.entityHit);
-        } else if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-            this.groundImpact(mop.sideHit);
+            if (mop.entityHit == shootingEntity) return;
+            if (!(mop.entityHit instanceof EntityLivingBase)) return;
+            this.onImpact((EntityLivingBase) mop.entityHit);
+        } else if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) this.groundImpact(mop.sideHit);
     }
 
     @Override
@@ -39,7 +38,14 @@ public class EntityBusterShot extends EntityShotBase {
 
     @Override
     void doFiringEffects() {
-        worldObj.spawnParticle("mobSpellAmbient", posX + smallGauss(0.1D), posY + smallGauss(0.1D), posZ + smallGauss(0.1D), 0.5D, 0.5D, 0.5D);
+        worldObj.spawnParticle(
+            "mobSpellAmbient",
+            posX + smallGauss(0.1D),
+            posY + smallGauss(0.1D),
+            posZ + smallGauss(0.1D),
+            0.5D,
+            0.5D,
+            0.5D);
         worldObj.spawnParticle("flame", posX, posY, posZ, gaussian(motionX), gaussian(motionY), gaussian(motionZ));
     }
 
@@ -56,8 +62,7 @@ public class EntityBusterShot extends EntityShotBase {
 
     @Override
     void onImpact(EntityLivingBase mop) {
-        if (mop != shootingEntity || ticksInAir > 3)
-            doDamage(mop);
+        if (mop != shootingEntity || ticksInAir > 3) doDamage(mop);
         this.doBurstEffect();
     }
 

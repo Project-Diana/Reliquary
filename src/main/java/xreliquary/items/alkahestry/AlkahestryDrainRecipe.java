@@ -1,18 +1,16 @@
 package xreliquary.items.alkahestry;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import lib.enderwizards.sandstone.util.ContentHelper;
-import lib.enderwizards.sandstone.util.NBTHelper;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.items.ItemAlkahestryTome;
-import xreliquary.util.alkahestry.AlkahestRecipe;
-import xreliquary.util.alkahestry.Alkahestry;
 
 public class AlkahestryDrainRecipe implements IRecipe {
 
@@ -24,8 +22,7 @@ public class AlkahestryDrainRecipe implements IRecipe {
         boolean foundNonTome = false;
         for (int count = 0; count < inv.getSizeInventory(); count++) {
             ItemStack stack = inv.getStackInSlot(count);
-            if (stack == null)
-                continue;
+            if (stack == null) continue;
             if ((stack.getItem() instanceof ItemAlkahestryTome)) {
                 if (!valid) valid = NBTHelper.getInteger("redstone", stack) > 0;
             } else {
@@ -51,26 +48,25 @@ public class AlkahestryDrainRecipe implements IRecipe {
             int quantity = NBTHelper.getInteger("redstone", tome);
             quantity = Math.min(quantity, new ItemStack(Items.redstone, 1, 0).getMaxStackSize());
 
-            if (quantity == 0)
-                return null;
+            if (quantity == 0) return null;
             return new ItemStack(Items.redstone, quantity);
         }
         return null;
     }
 
-
     @SubscribeEvent
-    public void onItemCraftedEvent(PlayerEvent.ItemCraftedEvent event)
-    {
-        if (event.crafting == null)
-            return;
+    public void onItemCraftedEvent(PlayerEvent.ItemCraftedEvent event) {
+        if (event.crafting == null) return;
         if (event.crafting.getItem() == Items.redstone) {
             for (int count = 0; count < event.craftMatrix.getSizeInventory(); ++count) {
                 ItemStack stack = event.craftMatrix.getStackInSlot(count);
-                if (stack == null)
-                    continue;
+                if (stack == null) continue;
                 if (stack.getItem() instanceof ItemAlkahestryTome) {
-                    NBTHelper.setInteger("redstone", event.craftMatrix.getStackInSlot(count), NBTHelper.getInteger("redstone", event.craftMatrix.getStackInSlot(count)) - event.crafting.stackSize);
+                    NBTHelper.setInteger(
+                        "redstone",
+                        event.craftMatrix.getStackInSlot(count),
+                        NBTHelper.getInteger("redstone", event.craftMatrix.getStackInSlot(count))
+                            - event.crafting.stackSize);
                 }
             }
         }

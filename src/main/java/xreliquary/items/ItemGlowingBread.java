@@ -1,9 +1,7 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.util.LanguageHelper;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -11,11 +9,14 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.util.LanguageHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 @ContentInit
 public class ItemGlowingBread extends ItemFood {
@@ -33,7 +34,12 @@ public class ItemGlowingBread extends ItemFood {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
 
-        itemIcon = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
+        itemIcon = iconRegister.registerIcon(
+            Reference.MOD_ID.toLowerCase() + ":"
+                + this.getUnlocalizedName()
+                    .substring(
+                        this.getUnlocalizedName()
+                            .indexOf(".") + 1));
     }
 
     @Override
@@ -56,7 +62,8 @@ public class ItemGlowingBread extends ItemFood {
     @Override
     public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
         --par1ItemStack.stackSize;
-        par3EntityPlayer.getFoodStats().addStats(20, 1.0F);
+        par3EntityPlayer.getFoodStats()
+            .addStats(20, 1.0F);
         par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
         this.onFoodEaten(par1ItemStack, par2World, par3EntityPlayer);
         return par1ItemStack;

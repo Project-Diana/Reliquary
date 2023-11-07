@@ -1,9 +1,8 @@
 package xreliquary.items;
 
-import baubles.api.BaubleType;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,13 +15,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import baubles.api.BaubleType;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-import lib.enderwizards.sandstone.util.NBTHelper;
-
-import java.util.Iterator;
-import java.util.List;
 
 @ContentInit
 public class ItemFortuneCoin extends ItemBauble {
@@ -65,36 +66,42 @@ public class ItemFortuneCoin extends ItemBauble {
 
     @Override
     public IIcon getIcon(ItemStack ist, int renderPass) {
-        if (!NBTHelper.getBoolean("enabled", ist) || renderPass != 1)
-            return this.itemIcon;
-        else
-            return iconOverlay;
+        if (!NBTHelper.getBoolean("enabled", ist) || renderPass != 1) return this.itemIcon;
+        else return iconOverlay;
     }
 
     @Override
     public void onUpdate(ItemStack ist, World world, Entity entity, int i, boolean f) {
-        if (world.isRemote)
-            return;
-        if (!disabledAudio())
-            if (NBTHelper.getShort("soundTimer", ist) > 0) {
-                if (NBTHelper.getShort("soundTimer", ist) % 2 == 0) {
-                    world.playSoundAtEntity(entity, "random.orb", 0.1F, 0.5F * ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.7F + 1.8F));
-                }
-                NBTHelper.setShort("soundTimer", ist, NBTHelper.getShort("soundTimer", ist) - 1);
+        if (world.isRemote) return;
+        if (!disabledAudio()) if (NBTHelper.getShort("soundTimer", ist) > 0) {
+            if (NBTHelper.getShort("soundTimer", ist) % 2 == 0) {
+                world.playSoundAtEntity(
+                    entity,
+                    "random.orb",
+                    0.1F,
+                    0.5F * ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.7F + 1.8F));
             }
-        if (!NBTHelper.getBoolean("enabled", ist))
-            return;
+            NBTHelper.setShort("soundTimer", ist, NBTHelper.getShort("soundTimer", ist) - 1);
+        }
+        if (!NBTHelper.getBoolean("enabled", ist)) return;
         EntityPlayer player = null;
         if (entity instanceof EntityPlayer) {
             player = (EntityPlayer) entity;
         }
-        if (player == null)
-            return;
+        if (player == null) return;
         scanForEntitiesInRange(world, player, getStandardPullDistance());
     }
 
     private void scanForEntitiesInRange(World world, EntityPlayer player, double d) {
-        List iList = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(player.posX - d, player.posY - d, player.posZ - d, player.posX + d, player.posY + d, player.posZ + d));
+        List iList = world.getEntitiesWithinAABB(
+            EntityItem.class,
+            AxisAlignedBB.getBoundingBox(
+                player.posX - d,
+                player.posY - d,
+                player.posZ - d,
+                player.posX + d,
+                player.posY + d,
+                player.posZ + d));
         Iterator iterator = iList.iterator();
         while (iterator.hasNext()) {
             EntityItem item = (EntityItem) iterator.next();
@@ -110,7 +117,15 @@ public class ItemFortuneCoin extends ItemBauble {
             teleportEntityToPlayer(item, player);
             break;
         }
-        List iList2 = world.getEntitiesWithinAABB(EntityXPOrb.class, AxisAlignedBB.getBoundingBox(player.posX - d, player.posY - d, player.posZ - d, player.posX + d, player.posY + d, player.posZ + d));
+        List iList2 = world.getEntitiesWithinAABB(
+            EntityXPOrb.class,
+            AxisAlignedBB.getBoundingBox(
+                player.posX - d,
+                player.posY - d,
+                player.posZ - d,
+                player.posX + d,
+                player.posY + d,
+                player.posZ + d));
         Iterator iterator2 = iList2.iterator();
         while (iterator2.hasNext()) {
             EntityXPOrb item = (EntityXPOrb) iterator2.next();
@@ -126,14 +141,25 @@ public class ItemFortuneCoin extends ItemBauble {
     }
 
     private void teleportEntityToPlayer(Entity item, EntityPlayer player) {
-        player.worldObj.spawnParticle("mobSpell", item.posX + 0.5D + player.worldObj.rand.nextGaussian() / 8, item.posY + 0.2D, item.posZ + 0.5D + player.worldObj.rand.nextGaussian() / 8, 0.9D, 0.9D, 0.0D);
+        player.worldObj.spawnParticle(
+            "mobSpell",
+            item.posX + 0.5D + player.worldObj.rand.nextGaussian() / 8,
+            item.posY + 0.2D,
+            item.posZ + 0.5D + player.worldObj.rand.nextGaussian() / 8,
+            0.9D,
+            0.9D,
+            0.0D);
         player.getLookVec();
         double x = player.posX + player.getLookVec().xCoord * 0.2D;
         double y = player.posY - player.height / 2F;
         double z = player.posZ + player.getLookVec().zCoord * 0.2D;
         item.setPosition(x, y, z);
         if (!disabledAudio()) {
-            player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.8F));
+            player.worldObj.playSoundAtEntity(
+                player,
+                "random.orb",
+                0.1F,
+                0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.8F));
         }
     }
 
@@ -144,22 +170,19 @@ public class ItemFortuneCoin extends ItemBauble {
                 continue;
             }
             if (ist.getItem() == item.getItem() && ist.getItemDamage() == item.getItemDamage()) {
-                if (ist.stackSize + remaining <= ist.getMaxStackSize())
-                    return true;
+                if (ist.stackSize + remaining <= ist.getMaxStackSize()) return true;
                 else {
                     int count = ist.stackSize;
                     while (count < ist.getMaxStackSize()) {
                         count++;
                         remaining--;
-                        if (remaining == 0)
-                            return true;
+                        if (remaining == 0) return true;
                     }
                 }
             }
         }
         for (int slot = 0; slot < player.inventory.mainInventory.length; slot++) {
-            if (player.inventory.mainInventory[slot] == null)
-                return true;
+            if (player.inventory.mainInventory[slot] == null) return true;
         }
         return false;
     }
@@ -170,11 +193,11 @@ public class ItemFortuneCoin extends ItemBauble {
     }
 
     public double getLongRangePullDistance() {
-        return (double)Reliquary.CONFIG.getInt(Names.fortune_coin, "long_range_pull_distance");
+        return (double) Reliquary.CONFIG.getInt(Names.fortune_coin, "long_range_pull_distance");
     }
 
     public double getStandardPullDistance() {
-        return (double)Reliquary.CONFIG.getInt(Names.fortune_coin, "standard_pull_distance");
+        return (double) Reliquary.CONFIG.getInt(Names.fortune_coin, "standard_pull_distance");
     }
 
     @Override

@@ -12,7 +12,6 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
         this.inventory = new ItemStack[size];
     }
 
-
     public void setInventory(ItemStack[] inventory) {
         if (inventory != null) this.inventory = inventory;
     }

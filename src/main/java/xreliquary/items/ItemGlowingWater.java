@@ -1,16 +1,16 @@
 package xreliquary.items;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lib.enderwizards.sandstone.init.ContentInit;
 import lib.enderwizards.sandstone.items.ItemBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import xreliquary.Reliquary;
 import xreliquary.entities.EntityGlowingWater;
 import xreliquary.lib.Names;
-import xreliquary.lib.Reference;
 
 @ContentInit
 public class ItemGlowingWater extends ItemBase {
@@ -42,8 +42,7 @@ public class ItemGlowingWater extends ItemBase {
 
     @Override
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        if (par2World.isRemote)
-            return par1ItemStack;
+        if (par2World.isRemote) return par1ItemStack;
         if (!par3EntityPlayer.capabilities.isCreativeMode) {
             --par1ItemStack.stackSize;
         }

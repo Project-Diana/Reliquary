@@ -1,13 +1,19 @@
 package lib.enderwizards.sandstone.init.recipes;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import lib.enderwizards.sandstone.Sandstone;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.*;
+import cpw.mods.fml.common.registry.GameRegistry;
+import lib.enderwizards.sandstone.Sandstone;
 
 /**
  * A builder for crafting table recipes. Why use it? Because it makes your code look very, very clean. And awesome. :D
@@ -25,8 +31,8 @@ public abstract class CraftingRecipeBuilder {
         private List<ItemStack> input = new ArrayList<ItemStack>();
 
         public ShapelessCraftingRecipeBuilder output(ItemStack stack) {
-            if (output != null)
-                Sandstone.LOGGER.warn("ShapelessCraftingRecipeBuilder: It's bad practice to replace a preexisting output()! Replacing.");
+            if (output != null) Sandstone.LOGGER.warn(
+                "ShapelessCraftingRecipeBuilder: It's bad practice to replace a preexisting output()! Replacing.");
             output = stack;
             return this;
         }
@@ -65,8 +71,8 @@ public abstract class CraftingRecipeBuilder {
         private Map<Character, Object> replacements = new HashMap<Character, Object>();
 
         public ShapedCraftingRecipeBuilder output(ItemStack stack) {
-            if (output != null)
-                Sandstone.LOGGER.warn("ShapedCraftingRecipeBuilder: It's bad practice to replace a preexisting output()! Replacing.");
+            if (output != null) Sandstone.LOGGER
+                .warn("ShapedCraftingRecipeBuilder: It's bad practice to replace a preexisting output()! Replacing.");
             output = stack;
             return this;
         }
@@ -88,7 +94,8 @@ public abstract class CraftingRecipeBuilder {
 
         private void where(char key, Object object) {
             if (replacements.containsKey(key)) {
-                Sandstone.LOGGER.warn("ShapedCraftingRecipeBuilder: It's bad practice to have two where()s with the same key! Replacing.");
+                Sandstone.LOGGER.warn(
+                    "ShapedCraftingRecipeBuilder: It's bad practice to have two where()s with the same key! Replacing.");
                 replacements.remove(key);
             }
             replacements.put(key, object);

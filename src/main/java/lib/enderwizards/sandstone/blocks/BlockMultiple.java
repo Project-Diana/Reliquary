@@ -1,8 +1,8 @@
 package lib.enderwizards.sandstone.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.items.block.ItemBlockMultiple;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,8 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.items.block.ItemBlockMultiple;
 
 public class BlockMultiple extends BlockBase {
 
@@ -45,10 +46,8 @@ public class BlockMultiple extends BlockBase {
     private static SubBlock[] buildSubBlocks(Object[] items) {
         List<SubBlock> newItems = new ArrayList<SubBlock>();
         for (Object item : items) {
-            if (item instanceof String)
-                newItems.add(new SubBlock((String) item));
-            if (item instanceof SubBlock)
-                newItems.add((SubBlock) item);
+            if (item instanceof String) newItems.add(new SubBlock((String) item));
+            if (item instanceof SubBlock) newItems.add((SubBlock) item);
         }
         return newItems.toArray(new SubBlock[newItems.size()]);
     }

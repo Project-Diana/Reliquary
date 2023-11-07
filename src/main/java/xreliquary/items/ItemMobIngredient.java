@@ -1,19 +1,20 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 /**
  * Created by Xeno on 10/11/2014.
@@ -36,7 +37,6 @@ public class ItemMobIngredient extends ItemBase {
         this.setHasSubtypes(true);
     }
 
-
     @Override
     public String getUnlocalizedName(ItemStack ist) {
         return "item.mob_ingredient_" + ist.getItemDamage();
@@ -44,15 +44,12 @@ public class ItemMobIngredient extends ItemBase {
 
     @Override
     public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-        for (int i = 0; i <= 15; i++)
-            par3List.add(new ItemStack(par1, 1, i));
+        for (int i = 0; i <= 15; i++) par3List.add(new ItemStack(par1, 1, i));
     }
-
 
     @Override
     public IIcon getIconFromDamage(int meta) {
-        if (meta < 16)
-            return icons[meta];
+        if (meta < 16) return icons[meta];
         return icons[0];
     }
 

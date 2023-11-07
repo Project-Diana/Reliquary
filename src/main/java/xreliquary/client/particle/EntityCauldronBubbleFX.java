@@ -1,7 +1,5 @@
 package xreliquary.client.particle;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -21,13 +19,16 @@ import xreliquary.lib.Reference;
  */
 @SideOnly(Side.CLIENT)
 public class EntityCauldronBubbleFX extends EntityFX {
-    private static ResourceLocation bubbleTexture = new ResourceLocation(Reference.MOD_ID + ":textures/particles/" + Names.cauldron_bubble + ".png");
+
+    private static ResourceLocation bubbleTexture = new ResourceLocation(
+        Reference.MOD_ID + ":textures/particles/" + Names.cauldron_bubble + ".png");
 
     public EntityCauldronBubbleFX(World world, double x, double y, double z) {
         this(world, x, y, z, 0D, 0D, 0D, 1.0F, 1.0F, 1.0F);
     }
 
-    public EntityCauldronBubbleFX(World world, double x, double y, double z, double xMot, double yMot, double zMot, float red, float green, float blue) {
+    public EntityCauldronBubbleFX(World world, double x, double y, double z, double xMot, double yMot, double zMot,
+        float red, float green, float blue) {
         super(world, x, y, z, xMot, yMot, zMot);
         this.setSize(0.02F, 0.02F);
         this.particleScale = 0.5F + (worldObj.rand.nextFloat() - 0.5F) * 0.4F;
@@ -47,19 +48,21 @@ public class EntityCauldronBubbleFX extends EntityFX {
     }
 
     @Override
-    public void renderParticle(Tessellator tess, float subTick, float rotX, float rotZ, float rotY_Z, float rotX_Y, float rotX_Z) {
-        float uMin = (float)this.particleTextureIndexX / 1F; // 1 is number of textures on the sheet (X)
+    public void renderParticle(Tessellator tess, float subTick, float rotX, float rotZ, float rotY_Z, float rotX_Y,
+        float rotX_Z) {
+        float uMin = (float) this.particleTextureIndexX / 1F; // 1 is number of textures on the sheet (X)
         float uMax = uMin + 1F; // always 1 / number of textures X
-        float vMin = (float)this.particleTextureIndexY / 4F; // same, on Y (4)
+        float vMin = (float) this.particleTextureIndexY / 4F; // same, on Y (4)
         float vMax = vMin + 1F / 4F;
 
-        float scale = 0.1F * this.particleScale * (1.0F + (float)this.particleAge / 20F);
-        float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * subTick - interpPosX);
-        float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * subTick - interpPosY);
-        float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * subTick - interpPosZ);
+        float scale = 0.1F * this.particleScale * (1.0F + (float) this.particleAge / 20F);
+        float x = (float) (this.prevPosX + (this.posX - this.prevPosX) * subTick - interpPosX);
+        float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * subTick - interpPosY);
+        float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * subTick - interpPosZ);
 
-
-        Minecraft.getMinecraft().getTextureManager().bindTexture(bubbleTexture);
+        Minecraft.getMinecraft()
+            .getTextureManager()
+            .bindTexture(bubbleTexture);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDepthMask(false);
@@ -74,10 +77,30 @@ public class EntityCauldronBubbleFX extends EntityFX {
 
         tess.startDrawingQuads();
         tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
-        tess.addVertexWithUV(x - rotX * scale - rotX_Y * scale, y - rotZ * scale, z - rotY_Z * scale - rotX_Z * scale, uMax, vMax);
-        tess.addVertexWithUV(x - rotX * scale + rotX_Y * scale, y + rotZ * scale, z - rotY_Z * scale + rotX_Z * scale, uMax, vMin);
-        tess.addVertexWithUV(x + rotX * scale + rotX_Y * scale, y + rotZ * scale, z + rotY_Z * scale + rotX_Z * scale, uMin, vMin);
-        tess.addVertexWithUV(x + rotX * scale - rotX_Y * scale, y - rotZ * scale, z + rotY_Z * scale - rotX_Z * scale, uMin, vMax);
+        tess.addVertexWithUV(
+            x - rotX * scale - rotX_Y * scale,
+            y - rotZ * scale,
+            z - rotY_Z * scale - rotX_Z * scale,
+            uMax,
+            vMax);
+        tess.addVertexWithUV(
+            x - rotX * scale + rotX_Y * scale,
+            y + rotZ * scale,
+            z - rotY_Z * scale + rotX_Z * scale,
+            uMax,
+            vMin);
+        tess.addVertexWithUV(
+            x + rotX * scale + rotX_Y * scale,
+            y + rotZ * scale,
+            z + rotY_Z * scale + rotX_Z * scale,
+            uMin,
+            vMin);
+        tess.addVertexWithUV(
+            x + rotX * scale - rotX_Y * scale,
+            y - rotZ * scale,
+            z + rotY_Z * scale - rotX_Z * scale,
+            uMin,
+            vMax);
         tess.draw();
 
         GL11.glDisable(GL11.GL_BLEND);
@@ -86,21 +109,19 @@ public class EntityCauldronBubbleFX extends EntityFX {
     }
 
     @Override
-    public void setParticleTextureIndex(int index)
-    {
+    public void setParticleTextureIndex(int index) {
         this.particleTextureIndexY = index;
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-//        if (this.particleMaxAge >= 18)
-//            this.moveEntity(0.02D, 0.0D, 0.02D);
+        // if (this.particleMaxAge >= 18)
+        // this.moveEntity(0.02D, 0.0D, 0.02D);
 
-        this.setAlphaF((float)this.particleAge / (float)this.particleMaxAge);
+        this.setAlphaF((float) this.particleAge / (float) this.particleMaxAge);
 
         // use setParticleTextureIndex based on the age of the particle
         int ageFromDeath = this.particleMaxAge - this.particleAge;
@@ -108,8 +129,7 @@ public class EntityCauldronBubbleFX extends EntityFX {
             this.setParticleTextureIndex(4 - Math.max(ageFromDeath / 2, 1));
         }
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setDead();
         }
     }

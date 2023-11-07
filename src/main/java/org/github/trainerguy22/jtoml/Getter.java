@@ -10,6 +10,7 @@ import java.util.Map;
  * @author <a href="mailto:a.grison@gmail.com">$Author: Alexandre Grison$</a>
  */
 public interface Getter {
+
     /**
      * Get the object.
      *

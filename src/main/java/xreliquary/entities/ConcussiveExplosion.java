@@ -1,5 +1,9 @@
 package xreliquary.entities;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,10 +13,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ConcussiveExplosion extends Explosion {
 
@@ -32,7 +32,8 @@ public class ConcussiveExplosion extends Explosion {
     private EntityPlayer shootingEntity;
     public boolean hurtsPlayer;
 
-    public ConcussiveExplosion(World par1World, Entity par2Entity, EntityPlayer par3Entity, double par3, double par5, double par7, float par9) {
+    public ConcussiveExplosion(World par1World, Entity par2Entity, EntityPlayer par3Entity, double par3, double par5,
+        double par7, float par9) {
         super(par1World, par2Entity, par3, par5, par7, par9);
         worldObj = par1World;
         exploder = par2Entity;
@@ -59,7 +60,11 @@ public class ConcussiveExplosion extends Explosion {
         for (var3 = 0; var3 < field_77289_h; ++var3) {
             for (var4 = 0; var4 < field_77289_h; ++var4) {
                 for (var5 = 0; var5 < field_77289_h; ++var5) {
-                    if (var3 == 0 || var3 == field_77289_h - 1 || var4 == 0 || var4 == field_77289_h - 1 || var5 == 0 || var5 == field_77289_h - 1) {
+                    if (var3 == 0 || var3 == field_77289_h - 1
+                        || var4 == 0
+                        || var4 == field_77289_h - 1
+                        || var5 == 0
+                        || var5 == field_77289_h - 1) {
                         double var6 = var3 / (field_77289_h - 1.0F) * 2.0F - 1.0F;
                         double var8 = var4 / (field_77289_h - 1.0F) * 2.0F - 1.0F;
                         double var10 = var5 / (field_77289_h - 1.0F) * 2.0F - 1.0F;
@@ -82,7 +87,9 @@ public class ConcussiveExplosion extends Explosion {
         int var28 = MathHelper.floor_double(explosionY + explosionSize + 1.0D);
         int var7 = MathHelper.floor_double(explosionZ - explosionSize - 1.0D);
         int var29 = MathHelper.floor_double(explosionZ + explosionSize + 1.0D);
-        List var9 = worldObj.getEntitiesWithinAABBExcludingEntity(exploder, AxisAlignedBB.getBoundingBox(var3, var5, var7, var4, var28, var29));
+        List var9 = worldObj.getEntitiesWithinAABBExcludingEntity(
+            exploder,
+            AxisAlignedBB.getBoundingBox(var3, var5, var7, var4, var28, var29));
 
         Vec3 var30 = Vec3.createVectorHelper(explosionX, explosionY, explosionZ);
 
@@ -107,7 +114,9 @@ public class ConcussiveExplosion extends Explosion {
                     var19 /= var33;
                     double var32 = worldObj.getBlockDensity(var30, var31.boundingBox);
                     double var34 = (1.0D - var13) * var32;
-                    var31.attackEntityFrom(DamageSource.causePlayerDamage(shootingEntity), (int) ((var34 * var34 + var34) * 6.0D * (explosionSize * 2) + 3.0D));
+                    var31.attackEntityFrom(
+                        DamageSource.causePlayerDamage(shootingEntity),
+                        (int) ((var34 * var34 + var34) * 6.0D * (explosionSize * 2) + 3.0D));
                     var31.motionX += var15 * var34;
                     var31.motionY += var17 * var34;
                     var31.motionZ += var19 * var34;
@@ -127,7 +136,13 @@ public class ConcussiveExplosion extends Explosion {
      */
     @Override
     public void doExplosionB(boolean par1) {
-        worldObj.playSoundEffect(explosionX, explosionY, explosionZ, "random.explode", 4.0F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+        worldObj.playSoundEffect(
+            explosionX,
+            explosionY,
+            explosionZ,
+            "random.explode",
+            4.0F,
+            (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
         if (explosionSize >= 2.0F && field_82755_b) {
             worldObj.spawnParticle("hugeexplosion", explosionX, explosionY, explosionZ, 1.0D, 0.0D, 0.0D);
@@ -142,14 +157,22 @@ public class ConcussiveExplosion extends Explosion {
         return field_77288_k;
     }
 
-    public static void customBusterExplosion(Entity par1Entity, EntityPlayer player, double par2, double par4, double par6, float par8, boolean par9, boolean par10) {
-        if (par1Entity.worldObj.isRemote)
-            return;
+    public static void customBusterExplosion(Entity par1Entity, EntityPlayer player, double par2, double par4,
+        double par6, float par8, boolean par9, boolean par10) {
+        if (par1Entity.worldObj.isRemote) return;
         par1Entity.worldObj.newExplosion(par1Entity, par2, par4, par6, par8, par9, par10);
     }
 
-    public static ConcussiveExplosion customConcussiveExplosion(Entity par1Entity, EntityPlayer player, double par2, double par4, double par6, float par8, boolean par9, boolean par10) {
-        ConcussiveExplosion var11 = new ConcussiveExplosion(par1Entity.worldObj, par1Entity, player, par2, par4, par6, par8);
+    public static ConcussiveExplosion customConcussiveExplosion(Entity par1Entity, EntityPlayer player, double par2,
+        double par4, double par6, float par8, boolean par9, boolean par10) {
+        ConcussiveExplosion var11 = new ConcussiveExplosion(
+            par1Entity.worldObj,
+            par1Entity,
+            player,
+            par2,
+            par4,
+            par6,
+            par8);
         var11.isFlaming = par9;
         var11.isSmoking = par10;
         var11.doExplosionA();

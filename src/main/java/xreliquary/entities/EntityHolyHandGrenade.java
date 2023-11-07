@@ -1,11 +1,12 @@
 package xreliquary.entities;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityHolyHandGrenade extends EntityThrowable {
 
@@ -53,7 +54,14 @@ public class EntityHolyHandGrenade extends EntityThrowable {
         super.onUpdate();
         if (count == 2) {
             for (int particles = 0; particles < rand.nextInt(2) + 1; particles++) {
-                worldObj.spawnParticle("mobSpell", posX + worldObj.rand.nextDouble(), posY + worldObj.rand.nextDouble(), posZ + worldObj.rand.nextDouble(), 0D, 0D, 0D);
+                worldObj.spawnParticle(
+                    "mobSpell",
+                    posX + worldObj.rand.nextDouble(),
+                    posY + worldObj.rand.nextDouble(),
+                    posZ + worldObj.rand.nextDouble(),
+                    0D,
+                    0D,
+                    0D);
             }
             count = 0;
         } else {

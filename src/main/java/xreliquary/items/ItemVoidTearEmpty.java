@@ -1,20 +1,22 @@
 package xreliquary.items;
 
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
-import lib.enderwizards.sandstone.util.ContentHelper;
-import lib.enderwizards.sandstone.util.InventoryHelper;
-import lib.enderwizards.sandstone.util.NBTHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
+import lib.enderwizards.sandstone.util.ContentHelper;
+import lib.enderwizards.sandstone.util.InventoryHelper;
+import lib.enderwizards.sandstone.util.NBTHelper;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 
 @ContentInit
 public class ItemVoidTearEmpty extends ItemBase {
+
     public ItemVoidTearEmpty() {
         super(Names.void_tear_empty);
         this.setCreativeTab(Reliquary.CREATIVE_TAB);
@@ -28,18 +30,21 @@ public class ItemVoidTearEmpty extends ItemBase {
             ItemStack createdTear = buildTear(ist, player, player.inventory, true);
             if (createdTear != null) {
                 --ist.stackSize;
-                player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.2F));
-                if (ist.stackSize == 0)
-                    return createdTear;
-                else
-                    addItemToInventory(player, createdTear);
+                player.worldObj.playSoundAtEntity(
+                    player,
+                    "random.orb",
+                    0.1F,
+                    0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.2F));
+                if (ist.stackSize == 0) return createdTear;
+                else addItemToInventory(player, createdTear);
             }
         }
         return ist;
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack ist, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUseFirst(ItemStack ist, EntityPlayer player, World world, int x, int y, int z, int side,
+        float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
 
             if (world.getTileEntity(x, y, z) instanceof IInventory) {
@@ -48,11 +53,14 @@ public class ItemVoidTearEmpty extends ItemBase {
                 ItemStack createdTear = buildTear(ist, player, inventory, false);
                 if (createdTear != null) {
                     --ist.stackSize;
-                    player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.2F));
+                    player.worldObj.playSoundAtEntity(
+                        player,
+                        "random.orb",
+                        0.1F,
+                        0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.2F));
                     if (ist.stackSize == 0)
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, createdTear);
-                    else
-                        addItemToInventory(player, createdTear);
+                    else addItemToInventory(player, createdTear);
                     return true;
                 }
             }
@@ -72,8 +80,7 @@ public class ItemVoidTearEmpty extends ItemBase {
 
     protected ItemStack buildTear(ItemStack ist, EntityPlayer player, IInventory inventory, boolean isPlayerInventory) {
         ItemStack target = InventoryHelper.getTargetItem(ist, inventory, false);
-        if(target == null)
-            return null;
+        if (target == null) return null;
         ItemStack filledTear = new ItemStack(Reliquary.CONTENT.getItem(Names.void_tear), 1, 0);
 
         NBTHelper.setString("itemID", filledTear, ContentHelper.getIdent(target.getItem()));
@@ -87,7 +94,7 @@ public class ItemVoidTearEmpty extends ItemBase {
             InventoryHelper.removeItem(target, inventory, quantity);
         }
         NBTHelper.setInteger("itemQuantity", filledTear, quantity);
-        //configurable auto-drain when created.
+        // configurable auto-drain when created.
         NBTHelper.setBoolean("enabled", filledTear, Reliquary.CONFIG.getBool(Names.void_tear, "absorb_when_created"));
 
         return filledTear;

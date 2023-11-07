@@ -1,15 +1,16 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemToggleable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemToggleable;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
@@ -21,10 +22,8 @@ public class ItemInfernalTear extends ItemToggleable {
 
     @Override
     public IIcon getIcon(ItemStack ist, int renderPass) {
-        if (!this.isEnabled(ist) || renderPass != 1)
-            return inactiveSprite;
-        else
-            return this.itemIcon;
+        if (!this.isEnabled(ist) || renderPass != 1) return inactiveSprite;
+        else return this.itemIcon;
     }
 
     @Override
@@ -51,14 +50,15 @@ public class ItemInfernalTear extends ItemToggleable {
 
     @Override
     public void onUpdate(ItemStack ist, World world, Entity e, int i, boolean flag) {
-        if (!isEnabled(ist))
-            return;
-        if (!(e instanceof EntityPlayer))
-            return;
-        EntityPlayer player = (EntityPlayer)e;
-        String ident = ist.getTagCompound().getString("itemID");
-        if (Alkahestry.getRegistry().containsKey(ident)) {
-            AlkahestRecipe recipe = Alkahestry.getRegistry().get(ident);
+        if (!isEnabled(ist)) return;
+        if (!(e instanceof EntityPlayer)) return;
+        EntityPlayer player = (EntityPlayer) e;
+        String ident = ist.getTagCompound()
+            .getString("itemID");
+        if (Alkahestry.getRegistry()
+            .containsKey(ident)) {
+            AlkahestRecipe recipe = Alkahestry.getRegistry()
+                .get(ident);
             // You need above Cobblestone level to get XP.
             if (recipe.yield != 32 && recipe.cost != 4) {
                 player.addExperience((int) (Math.round(((1d / (double) recipe.cost) / (double) recipe.yield) * 150)));

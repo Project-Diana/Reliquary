@@ -1,9 +1,5 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -11,6 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
 
@@ -43,7 +44,8 @@ public class ItemAngelicFeather extends ItemBase {
     // minor jump buff
     @Override
     public void onUpdate(ItemStack ist, World world, Entity e, int i, boolean f) {
-        int potency = Reliquary.CONFIG.getInt(this instanceof ItemPhoenixDown ? Names.phoenix_down : Names.angelic_feather, "leaping_potency");
+        int potency = Reliquary.CONFIG
+            .getInt(this instanceof ItemPhoenixDown ? Names.phoenix_down : Names.angelic_feather, "leaping_potency");
         if (potency == 0) return;
         potency -= 1;
         if (e instanceof EntityPlayer) {

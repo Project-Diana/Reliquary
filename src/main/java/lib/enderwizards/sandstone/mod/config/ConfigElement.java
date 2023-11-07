@@ -1,15 +1,15 @@
 package lib.enderwizards.sandstone.mod.config;
 
-import cpw.mods.fml.client.config.ConfigGuiType;
-import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
-import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
-import cpw.mods.fml.client.config.IConfigElement;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import cpw.mods.fml.client.config.ConfigGuiType;
+import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
+import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
+import cpw.mods.fml.client.config.IConfigElement;
 
 public class ConfigElement<T> implements IConfigElement<T> {
 
@@ -99,11 +99,13 @@ public class ConfigElement<T> implements IConfigElement<T> {
         return getType(config.get(group, key));
     }
 
-    public static ConfigElement<?> getTypedElement(String mod_id, String key, Map<String, Object> value, Map<String, Object> def) {
+    public static ConfigElement<?> getTypedElement(String mod_id, String key, Map<String, Object> value,
+        Map<String, Object> def) {
         return getTypedElement(mod_id, "", key, value, def);
     }
 
-    public static ConfigElement<?> getTypedElement(String mod_id, String group, String key, Map<String, Object> value, Map<String, Object> def) {
+    public static ConfigElement<?> getTypedElement(String mod_id, String group, String key, Map<String, Object> value,
+        Map<String, Object> def) {
         ConfigGuiType type = getType(value);
 
         if (type == null) {
@@ -169,7 +171,7 @@ public class ConfigElement<T> implements IConfigElement<T> {
         if (get() instanceof List) {
             return ((List) get()).toArray();
         } else {
-            return new Object[]{getDefault()};
+            return new Object[] { getDefault() };
         }
     }
 

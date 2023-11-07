@@ -3,6 +3,7 @@ package xreliquary.client.model;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+
 import org.lwjgl.opengl.GL11;
 
 public class ModelWitchHat extends ModelBiped {
@@ -15,10 +16,12 @@ public class ModelWitchHat extends ModelBiped {
         super();
         this.witchHat = (new ModelRenderer(this)).setTextureSize(64, 128);
         this.witchHat.setRotationPoint(0.0f, 0.0f, 0.0f);
-        this.witchHat.setTextureOffset(0, 64).addBox(-5.0F, -10F, -5.0F, 10, 2, 10, 0.5f);
+        this.witchHat.setTextureOffset(0, 64)
+            .addBox(-5.0F, -10F, -5.0F, 10, 2, 10, 0.5f);
         ModelRenderer modelrenderer = (new ModelRenderer(this)).setTextureSize(64, 128);
         modelrenderer.setRotationPoint(1.75F, -4.0F, 2.0F);
-        modelrenderer.setTextureOffset(0, 76).addBox(-5.25F, -10F, -5.25F, 7, 4, 7);
+        modelrenderer.setTextureOffset(0, 76)
+            .addBox(-5.25F, -10F, -5.25F, 7, 4, 7);
         modelrenderer.rotateAngleX = -0.05235988F;
         modelrenderer.rotateAngleZ = 0.02617994F;
         this.witchHat.addChild(modelrenderer);
@@ -30,10 +33,8 @@ public class ModelWitchHat extends ModelBiped {
         this.witchHat.rotateAngleY = this.bipedHead.rotateAngleY;
         this.witchHat.rotateAngleX = this.bipedHead.rotateAngleX;
 
-        if (this.isSneak)
-            this.witchHat.rotationPointY = 1.0F;
-        else
-            this.witchHat.rotationPointY = 0.0F;
+        if (this.isSneak) this.witchHat.rotationPointY = 1.0F;
+        else this.witchHat.rotationPointY = 0.0F;
 
         GL11.glPushMatrix();
         this.witchHat.render(f5);

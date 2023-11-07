@@ -1,12 +1,14 @@
 package lib.enderwizards.sandstone.client.gui;
 
-import lib.enderwizards.sandstone.util.LanguageHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
+
+import lib.enderwizards.sandstone.util.LanguageHelper;
 
 /**
  * A helper class for GUIs. Handles String parsing and positioning, and easily drawing ItemStacks.
@@ -23,13 +25,15 @@ public abstract class GuiBase extends GuiContainer {
      * Draws a positioned set of strings, with a new line indicated by ';'.
      *
      * @param renderer The font renderer. Should be 'mc.fontRenderer' unless your using the Galactic fontRenderer.
-     * @param values   The String to parse. New line indicated by ';'. If the value is a localization key, it'll be translated and used.
+     * @param values   The String to parse. New line indicated by ';'. If the value is a localization key, it'll be
+     *                 translated and used.
      * @param x        The x position of all of the lines.
      * @param baseY    The base Y position. This will be modified by 9 each new line.
      * @param color    The color value.
      */
     public void drawPositionedString(FontRenderer renderer, String values, int x, int baseY, int color) {
-        if (!LanguageHelper.getLocalization(values).equals(values)) {
+        if (!LanguageHelper.getLocalization(values)
+            .equals(values)) {
             values = LanguageHelper.getLocalization(values);
         }
         int count = 1;
@@ -44,13 +48,15 @@ public abstract class GuiBase extends GuiContainer {
      * Not much different from drawPositionedString(), but this centers the String on the x axis.
      *
      * @param renderer The font renderer. Should be 'mc.fontRenderer' unless your using the Galactic fontRenderer.
-     * @param values   The String to parse. New line indicated by ';'. If the value is a localization key, it'll be translated and used.
+     * @param values   The String to parse. New line indicated by ';'. If the value is a localization key, it'll be
+     *                 translated and used.
      * @param xLimit   The maximum x value allowed for centering.
      * @param baseY    The base Y position. This will be modified by 9 each new line.
      * @param color    The color value.
      */
     public void drawCenteredPositionedString(FontRenderer renderer, String values, int xLimit, int baseY, int color) {
-        if (!LanguageHelper.getLocalization(values).equals(values)) {
+        if (!LanguageHelper.getLocalization(values)
+            .equals(values)) {
             values = LanguageHelper.getLocalization(values);
         }
         int count = 1;
@@ -82,8 +88,20 @@ public abstract class GuiBase extends GuiContainer {
         GL11.glDisable(GL11.GL_LIGHTING);
         this.zLevel = 200.0F;
         itemRender.zLevel = 200.0F;
-        itemRender.renderItemAndEffectIntoGUI(stack.getItem().getFontRenderer(stack), this.mc.getTextureManager(), stack, x, y);
-        itemRender.renderItemOverlayIntoGUI(stack.getItem().getFontRenderer(stack), this.mc.getTextureManager(), stack, x, y);
+        itemRender.renderItemAndEffectIntoGUI(
+            stack.getItem()
+                .getFontRenderer(stack),
+            this.mc.getTextureManager(),
+            stack,
+            x,
+            y);
+        itemRender.renderItemOverlayIntoGUI(
+            stack.getItem()
+                .getFontRenderer(stack),
+            this.mc.getTextureManager(),
+            stack,
+            x,
+            y);
         this.zLevel = 0.0F;
         itemRender.zLevel = 0.0F;
         GL11.glEnable(GL11.GL_LIGHTING);

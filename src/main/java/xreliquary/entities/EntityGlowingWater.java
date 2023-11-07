@@ -1,18 +1,13 @@
 package xreliquary.entities;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Items;
@@ -22,11 +17,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityGlowingWater extends EntityThrowable {
+
     public EntityGlowingWater(World par1World) {
         super(par1World);
     }
@@ -79,7 +74,9 @@ public class EntityGlowingWater extends EntityThrowable {
             while (i.hasNext()) {
                 EntityLiving e = (EntityLiving) i.next();
                 if (isUndead(e) && this.getThrower() != null && this.getThrower() instanceof EntityPlayer) {
-                    e.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) this.getThrower()), 18 + rand.nextInt(17));
+                    e.attackEntityFrom(
+                        DamageSource.causePlayerDamage((EntityPlayer) this.getThrower()),
+                        18 + rand.nextInt(17));
                 }
             }
 
@@ -94,7 +91,14 @@ public class EntityGlowingWater extends EntityThrowable {
         double z = posZ;
         String itemBreakIcon = "iconcrack_" + Item.getIdFromItem(Items.potionitem);
         for (int particleNum = 0; particleNum < 8; ++particleNum) {
-            worldObj.spawnParticle(itemBreakIcon, x, y, z, rand.nextGaussian() * 0.15D, rand.nextDouble() * 0.2D, rand.nextGaussian() * 0.15D);
+            worldObj.spawnParticle(
+                itemBreakIcon,
+                x,
+                y,
+                z,
+                rand.nextGaussian() * 0.15D,
+                rand.nextDouble() * 0.2D,
+                rand.nextGaussian() * 0.15D);
         }
 
         float red = 1.0F;
@@ -109,7 +113,8 @@ public class EntityGlowingWater extends EntityThrowable {
             double yVel = 0.01D + rand.nextDouble() * 0.5D;
             double zVel = Math.sin(radian) * velocityCoefficient;
             if (worldObj.isRemote) {
-                EntityFX effect = Minecraft.getMinecraft().renderGlobal.doSpawnParticle(nameOfParticle, x + xVel * 0.1D, y + 0.3D, z + zVel * 0.1D, xVel, yVel, zVel);
+                EntityFX effect = Minecraft.getMinecraft().renderGlobal
+                    .doSpawnParticle(nameOfParticle, x + xVel * 0.1D, y + 0.3D, z + zVel * 0.1D, xVel, yVel, zVel);
                 if (effect != null) {
                     float variance = 0.75F + rand.nextFloat() * 0.25F;
                     effect.setRBGColorF(red * variance, green * variance, blue * variance);
@@ -118,6 +123,12 @@ public class EntityGlowingWater extends EntityThrowable {
             }
         }
 
-        worldObj.playSoundEffect(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "dig.glass", 1.0F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+        worldObj.playSoundEffect(
+            posX + 0.5D,
+            posY + 0.5D,
+            posZ + 0.5D,
+            "dig.glass",
+            1.0F,
+            worldObj.rand.nextFloat() * 0.1F + 0.9F);
     }
 }

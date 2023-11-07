@@ -1,5 +1,17 @@
 package xreliquary;
 
+import java.io.File;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -13,26 +25,20 @@ import lib.enderwizards.sandstone.Sandstone;
 import lib.enderwizards.sandstone.init.Content;
 import lib.enderwizards.sandstone.mod.SandstoneMod;
 import lib.enderwizards.sandstone.mod.config.Config;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lib.enderwizards.sandstone.util.WorldDataHandler;
 import xreliquary.common.CommonProxy;
 import xreliquary.integration.NEIModIntegration;
 import xreliquary.lib.Reference;
 import xreliquary.network.PacketHandler;
-import lib.enderwizards.sandstone.util.WorldDataHandler;
 import xreliquary.util.alkahestry.AlkahestRecipe;
 import xreliquary.util.alkahestry.Alkahestry;
 import xreliquary.util.potions.PotionMap;
 
-import java.io.File;
-
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = "xreliquary.client.gui.XRGuiFactory")
+@Mod(
+    modid = Reference.MOD_ID,
+    name = Reference.MOD_NAME,
+    version = Reference.VERSION,
+    guiFactory = "xreliquary.client.gui.XRGuiFactory")
 @SandstoneMod(basePackage = "xreliquary")
 public class Reliquary {
 
@@ -56,10 +62,10 @@ public class Reliquary {
 
         WorldDataHandler.register();
 
-        //important that this initializes AFTER items already exist.
+        // important that this initializes AFTER items already exist.
         PotionMap.init();
 
-        //important that this initializes before the pre-init phase
+        // important that this initializes before the pre-init phase
         PROXY.initRecipeDisablers();
 
         PROXY.preInit();
@@ -79,10 +85,11 @@ public class Reliquary {
     public void postInit(FMLPostInitializationEvent event) {
         PROXY.postInit();
 
-        //and finally save the file changes. post init is the last stage of configuration, it does an entity scan, hopefully it's cross-mod compatible.
+        // and finally save the file changes. post init is the last stage of configuration, it does an entity scan,
+        // hopefully it's cross-mod compatible.
         CONFIG.save();
 
-        //finally, initialize the potion list, this is done after ensuring configs.
+        // finally, initialize the potion list, this is done after ensuring configs.
         PotionMap.initializePotionMappings();
 
         LOGGER.log(Level.INFO, "Loaded successfully!");
@@ -95,14 +102,32 @@ public class Reliquary {
         for (IMCMessage message : event.getMessages()) {
             if (message.key.equals("Alkahest")) {
                 NBTTagCompound tag = message.getNBTValue();
-                if (tag != null && ItemStack.loadItemStackFromNBT(tag.getCompoundTag("item")) != null && tag.hasKey("yield") && tag.hasKey("cost")) {
-                    if (tag.hasKey("dictionaryName"))
-                        Alkahestry.addKey(new AlkahestRecipe(tag.getString("dictionaryName"), tag.getInteger("yield"), tag.getInteger("cost")));
-                    else
-                        Alkahestry.addKey(new AlkahestRecipe(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("item")), tag.getInteger("yield"), tag.getInteger("cost")));
-                    LOGGER.log(Level.INFO, "[IMC] Added AlkahestRecipe ID: " + Item.itemRegistry.getNameForObject(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("item"))) + " from " + message.getSender() + " to registry.");
+                if (tag != null && ItemStack.loadItemStackFromNBT(tag.getCompoundTag("item")) != null
+                    && tag.hasKey("yield")
+                    && tag.hasKey("cost")) {
+                    if (tag.hasKey("dictionaryName")) Alkahestry.addKey(
+                        new AlkahestRecipe(
+                            tag.getString("dictionaryName"),
+                            tag.getInteger("yield"),
+                            tag.getInteger("cost")));
+                    else Alkahestry.addKey(
+                        new AlkahestRecipe(
+                            ItemStack.loadItemStackFromNBT(tag.getCompoundTag("item")),
+                            tag.getInteger("yield"),
+                            tag.getInteger("cost")));
+                    LOGGER.log(
+                        Level.INFO,
+                        "[IMC] Added AlkahestRecipe ID: "
+                            + Item.itemRegistry
+                                .getNameForObject(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("item")))
+                            + " from "
+                            + message.getSender()
+                            + " to registry.");
                 } else {
-                    LOGGER.log(Level.WARN, "[IMC] Invalid AlkahestRecipe from " + message.getSender() + "! Please contact the mod author if you see this error occurring.");
+                    LOGGER.log(
+                        Level.WARN,
+                        "[IMC] Invalid AlkahestRecipe from " + message.getSender()
+                            + "! Please contact the mod author if you see this error occurring.");
                 }
             }
         }

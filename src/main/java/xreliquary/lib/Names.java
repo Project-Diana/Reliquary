@@ -51,7 +51,8 @@ public class Names {
     public static final String heart_pearl = "heart_pearl";
     public static final String heart_zhu = "heart_zhu";
 
-    //these aren't the names of the items (those are based on metadata, purely) but they're used for config readability.
+    // these aren't the names of the items (those are based on metadata, purely) but they're used for config
+    // readability.
     public static final String seeker_shot = "seeker_shot";
     public static final String zombie_heart = "necrotic_heart_zombie";
     public static final String pigman_heart = "necrotic_heart_pigman";
@@ -97,16 +98,16 @@ public class Names {
     public static final String cauldron_water = "cauldron_water";
     public static final String cauldron_bubble = "cauldron_bubble";
 
-    //these are for configs, they're just the names of things I didn't want to magic string.
+    // these are for configs, they're just the names of things I didn't want to magic string.
     public static final String recipe_enabled = "recipe_enabled";
     public static final String hud_positions = "hud_positions";
     public static final String easy_mode_recipes = "easy_mode_recipes";
     public static final String mob_drop_probability = "mob_drop_probability";
 
-    //these are for items, like above, didn't want to magic string them. I will use them eventually.
-//    public static final String snowball_mode = "snowballs";
-//    public static final String eruption_mode = "eruption";
-//    public static final String blaze_mode = "blaze";
-//    public static final String charge_mode = "charge";
+    // these are for items, like above, didn't want to magic string them. I will use them eventually.
+    // public static final String snowball_mode = "snowballs";
+    // public static final String eruption_mode = "eruption";
+    // public static final String blaze_mode = "blaze";
+    // public static final String charge_mode = "charge";
 
 }

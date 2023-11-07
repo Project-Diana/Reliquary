@@ -1,19 +1,20 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
+import java.util.Random;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Names;
-
-import java.util.Random;
 
 @ContentInit
 public class ItemWitherlessRose extends ItemBase {
@@ -41,15 +42,21 @@ public class ItemWitherlessRose extends ItemBase {
     @Override
     public void onUpdate(ItemStack ist, World world, Entity e, int i, boolean f) {
         EntityPlayer player = null;
-        if (!(e instanceof EntityPlayer))
-            return;
+        if (!(e instanceof EntityPlayer)) return;
         player = (EntityPlayer) e;
         if (player.isPotionActive(Potion.wither.id)) {
             player.removePotionEffect(Potion.wither.id);
             for (int particles = 0; particles < 10; particles++) {
                 double gauss1 = gaussian(world.rand);
                 double gauss2 = gaussian(world.rand);
-                world.spawnParticle("mobSpell", player.posX + gauss1, player.posY + player.height / 2, player.posZ + gauss2, 0.0, 0.0, 1.0);
+                world.spawnParticle(
+                    "mobSpell",
+                    player.posX + gauss1,
+                    player.posY + player.height / 2,
+                    player.posZ + gauss2,
+                    0.0,
+                    0.0,
+                    1.0);
             }
         }
     }

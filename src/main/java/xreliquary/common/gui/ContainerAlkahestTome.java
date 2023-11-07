@@ -5,8 +5,7 @@ import net.minecraft.inventory.Container;
 
 public class ContainerAlkahestTome extends Container {
 
-    public ContainerAlkahestTome() {
-    }
+    public ContainerAlkahestTome() {}
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {

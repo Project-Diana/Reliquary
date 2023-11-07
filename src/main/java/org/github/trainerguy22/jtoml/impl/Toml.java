@@ -1,8 +1,5 @@
 package org.github.trainerguy22.jtoml.impl;
 
-import org.github.trainerguy22.jtoml.TomlParser;
-import org.github.trainerguy22.jtoml.Util;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,12 +7,16 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
+import org.github.trainerguy22.jtoml.TomlParser;
+import org.github.trainerguy22.jtoml.Util;
+
 public class Toml {
 
     private static final Logger LOGGER = Logger.getLogger(Toml.class.getName());
 
     /**
-     * The default {@link TomlParser} loaded from {@link ServiceLoader}. Defaults to {@link SimpleTomlParser} if none found
+     * The default {@link TomlParser} loaded from {@link ServiceLoader}. Defaults to {@link SimpleTomlParser} if none
+     * found
      */
     private static TomlParser parser;
 

@@ -1,14 +1,15 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.entities.potion.EntityFertilePotion;
 import xreliquary.lib.Colors;
@@ -37,7 +38,6 @@ public class ItemFertilePotion extends ItemBase {
         return new ItemStack(Reliquary.CONTENT.getItem(Names.potion), 1, 0);
     }
 
-
     @SideOnly(Side.CLIENT)
     private IIcon iconSplashOverlay;
 
@@ -54,29 +54,27 @@ public class ItemFertilePotion extends ItemBase {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
         super.registerIcons(iconRegister);
-        iconSplashOverlay = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.potion_splash_overlay);
+        iconSplashOverlay = iconRegister
+            .registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.potion_splash_overlay);
         iconSplash = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.potion_splash);
     }
 
     @Override
     public IIcon getIcon(ItemStack itemStack, int renderPass) {
-        if (renderPass == 1)
-            return iconSplashOverlay;
+        if (renderPass == 1) return iconSplashOverlay;
         return this.iconSplash;
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
-        if (renderPass == 1)
-            return Integer.parseInt(Colors.FERTILIZER_COLOR, 16);
-        else
-            return Integer.parseInt(Colors.PURE, 16);
+        if (renderPass == 1) return Integer.parseInt(Colors.FERTILIZER_COLOR, 16);
+        else return Integer.parseInt(Colors.PURE, 16);
     }
 
-   @Override
+    @Override
     public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer player) {
-        if (world.isRemote)
-            return ist;
+        if (world.isRemote) return ist;
         if (!player.capabilities.isCreativeMode) {
             --ist.stackSize;
         }

@@ -1,26 +1,28 @@
 package xreliquary.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.init.ContentInit;
-import lib.enderwizards.sandstone.items.ItemBase;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.init.ContentInit;
+import lib.enderwizards.sandstone.items.ItemBase;
 import xreliquary.Reliquary;
 import xreliquary.lib.Colors;
 import xreliquary.lib.Names;
 import xreliquary.lib.Reference;
-
-import java.util.List;
 
 /**
  * Created by Xeno on 10/11/2014.
  */
 @ContentInit
 public class ItemHeartPearl extends ItemBase {
+
     public ItemHeartPearl() {
         super(Names.heart_pearl);
         this.setCreativeTab(Reliquary.CREATIVE_TAB);
@@ -50,8 +52,7 @@ public class ItemHeartPearl extends ItemBase {
 
     @Override
     public IIcon getIcon(ItemStack itemStack, int renderPass) {
-        if (renderPass == 1)
-            return this.itemIcon;
+        if (renderPass == 1) return this.itemIcon;
         return this.itemIcon;
     }
 
@@ -62,16 +63,14 @@ public class ItemHeartPearl extends ItemBase {
 
     @Override
     public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-        for (int i = 0; i < 4; i++)
-            par3List.add(new ItemStack(par1, 1, i));
+        for (int i = 0; i < 4; i++) par3List.add(new ItemStack(par1, 1, i));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
-        if (renderPass == 1)
-            return getColor(itemStack);
-        return Integer.parseInt(Colors.PURE,16);
+        if (renderPass == 1) return getColor(itemStack);
+        return Integer.parseInt(Colors.PURE, 16);
     }
 
     public int getColor(ItemStack itemStack) {

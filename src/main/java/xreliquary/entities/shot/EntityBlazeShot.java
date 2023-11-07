@@ -10,6 +10,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class EntityBlazeShot extends EntityShotBase {
+
     public EntityBlazeShot(World par1World) {
         super(par1World);
     }
@@ -31,7 +32,14 @@ public class EntityBlazeShot extends EntityShotBase {
 
     @Override
     void doFiringEffects() {
-        worldObj.spawnParticle("mobSpellAmbient", posX + smallGauss(0.1D), posY + smallGauss(0.1D), posZ + smallGauss(0.1D), 0.5D, 0.5D, 0.5D);
+        worldObj.spawnParticle(
+            "mobSpellAmbient",
+            posX + smallGauss(0.1D),
+            posY + smallGauss(0.1D),
+            posZ + smallGauss(0.1D),
+            0.5D,
+            0.5D,
+            0.5D);
         worldObj.spawnParticle("flame", posX, posY, posZ, gaussian(motionX), gaussian(motionY), gaussian(motionZ));
     }
 
@@ -43,11 +51,9 @@ public class EntityBlazeShot extends EntityShotBase {
     @Override
     void onImpact(MovingObjectPosition mop) {
         if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mop.entityHit != null) {
-            if (mop.entityHit == shootingEntity)
-                return;
-            if (!(mop.entityHit instanceof EntityLivingBase))
-                return;
-            this.onImpact((EntityLivingBase)mop.entityHit);
+            if (mop.entityHit == shootingEntity) return;
+            if (!(mop.entityHit instanceof EntityLivingBase)) return;
+            this.onImpact((EntityLivingBase) mop.entityHit);
         } else if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             if (shootingEntity == null) return;
 
@@ -76,10 +82,8 @@ public class EntityBlazeShot extends EntityShotBase {
                     x++;
                     break;
             }
-            if (shootingEntity.canPlayerEdit(x, y, z, mop.sideHit, new ItemStack(Items.flint_and_steel, 1, 0)))
-            {
-                if (this.worldObj.isAirBlock(x, y, z))
-                {
+            if (shootingEntity.canPlayerEdit(x, y, z, mop.sideHit, new ItemStack(Items.flint_and_steel, 1, 0))) {
+                if (this.worldObj.isAirBlock(x, y, z)) {
                     worldObj.setBlock(x, y, z, Blocks.fire);
                 }
             }
@@ -99,13 +103,19 @@ public class EntityBlazeShot extends EntityShotBase {
     @Override
     void spawnHitParticles(String string, int i) {
         for (int particles = 0; particles < i; particles++) {
-            worldObj.spawnParticle(string, posX, posY - (string == "portal" ? 1 : 0), posZ, gaussian(motionX), gaussian(motionY), gaussian(motionZ));
+            worldObj.spawnParticle(
+                string,
+                posX,
+                posY - (string == "portal" ? 1 : 0),
+                posZ,
+                gaussian(motionX),
+                gaussian(motionY),
+                gaussian(motionZ));
         }
     }
 
     @Override
-    protected void groundImpact(int sideHit) {
-    }
+    protected void groundImpact(int sideHit) {}
 
     @Override
     int getRicochetMax() {
@@ -116,7 +126,7 @@ public class EntityBlazeShot extends EntityShotBase {
     int getDamageOfShot(EntityLivingBase mop) {
         // they're not COMPLETELY useless against fireImmune mobs, just mostly
         // useless.
-        //this probably isn't gonna work now the bullets do purely fire damage.
+        // this probably isn't gonna work now the bullets do purely fire damage.
         return mop.isImmuneToFire() ? 2 : (10 + d12());
     }
 
@@ -125,26 +135,67 @@ public class EntityBlazeShot extends EntityShotBase {
         for (int particles = 0; particles < 40; particles++) {
             switch (sideHit) {
                 case 0:
-                    worldObj.spawnParticle("flame", posX, posY, posZ, smallGauss(0.1D) + motionX / 4, -posGauss(0.2D), smallGauss(0.2D) + motionZ / 4);
+                    worldObj.spawnParticle(
+                        "flame",
+                        posX,
+                        posY,
+                        posZ,
+                        smallGauss(0.1D) + motionX / 4,
+                        -posGauss(0.2D),
+                        smallGauss(0.2D) + motionZ / 4);
                     break;
                 case 1:
-                    worldObj.spawnParticle("flame", posX, posY, posZ, smallGauss(0.1D) + motionX / 4, posGauss(0.2D), smallGauss(0.2D) + motionZ / 4);
+                    worldObj.spawnParticle(
+                        "flame",
+                        posX,
+                        posY,
+                        posZ,
+                        smallGauss(0.1D) + motionX / 4,
+                        posGauss(0.2D),
+                        smallGauss(0.2D) + motionZ / 4);
                     break;
                 case 2:
-                    worldObj.spawnParticle("flame", posX, posY, posZ, smallGauss(0.1D) + motionX / 4, smallGauss(0.1D) + motionY / 4, -posGauss(0.2D));
+                    worldObj.spawnParticle(
+                        "flame",
+                        posX,
+                        posY,
+                        posZ,
+                        smallGauss(0.1D) + motionX / 4,
+                        smallGauss(0.1D) + motionY / 4,
+                        -posGauss(0.2D));
                     break;
                 case 3:
-                    worldObj.spawnParticle("flame", posX, posY, posZ, smallGauss(0.1D) + motionX / 4, smallGauss(0.1D) + motionY / 4, posGauss(0.2D));
+                    worldObj.spawnParticle(
+                        "flame",
+                        posX,
+                        posY,
+                        posZ,
+                        smallGauss(0.1D) + motionX / 4,
+                        smallGauss(0.1D) + motionY / 4,
+                        posGauss(0.2D));
                     break;
                 case 4:
-                    worldObj.spawnParticle("flame", posX, posY, posZ, -posGauss(0.2D), smallGauss(0.1D) + motionY / 4, smallGauss(0.1D) + motionZ / 4);
+                    worldObj.spawnParticle(
+                        "flame",
+                        posX,
+                        posY,
+                        posZ,
+                        -posGauss(0.2D),
+                        smallGauss(0.1D) + motionY / 4,
+                        smallGauss(0.1D) + motionZ / 4);
                     break;
                 case 5:
-                    worldObj.spawnParticle("flame", posX, posY, posZ, posGauss(0.2D), smallGauss(0.1D) + motionY / 4, smallGauss(0.1D) + motionZ / 4);
+                    worldObj.spawnParticle(
+                        "flame",
+                        posX,
+                        posY,
+                        posZ,
+                        posGauss(0.2D),
+                        smallGauss(0.1D) + motionY / 4,
+                        smallGauss(0.1D) + motionZ / 4);
                     break;
             }
         }
-
 
     }
 }

@@ -1,15 +1,16 @@
 package lib.enderwizards.sandstone.mod.config;
 
-import cpw.mods.fml.client.config.IConfigElement;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import org.github.trainerguy22.jtoml.impl.Toml;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.github.trainerguy22.jtoml.impl.Toml;
+
+import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class ConfigImpl extends Config {
 
@@ -31,8 +32,8 @@ public class ConfigImpl extends Config {
     }
 
     public void require(String group, String key, ConfigReference def) {
-        if (def.side == Side.CLIENT && FMLCommonHandler.instance().getSide() == Side.SERVER)
-            return;
+        if (def.side == Side.CLIENT && FMLCommonHandler.instance()
+            .getSide() == Side.SERVER) return;
 
         if (getDefaultGroup(group) == null) {
             if (defaults.get(group) != null) {
@@ -49,8 +50,7 @@ public class ConfigImpl extends Config {
             config.put(group, new HashMap<String, Object>());
         }
 
-        if (getGroup(group).containsKey(key))
-            return;
+        if (getGroup(group).containsKey(key)) return;
         getGroup(group).put(key, def.defaultValue);
     }
 
@@ -66,8 +66,7 @@ public class ConfigImpl extends Config {
     }
 
     public Integer getInt(String group, String key) {
-        if (this.get(group, key) instanceof Integer)
-            return (Integer) this.get(group, key);
+        if (this.get(group, key) instanceof Integer) return (Integer) this.get(group, key);
         return null;
     }
 
@@ -79,8 +78,7 @@ public class ConfigImpl extends Config {
     public List<String> getGroups() {
         List<String> groups = new ArrayList<String>();
         for (String key : config.keySet()) {
-            if (getGroup(key) != null)
-                groups.add(key);
+            if (getGroup(key) != null) groups.add(key);
         }
 
         return groups;
@@ -112,8 +110,7 @@ public class ConfigImpl extends Config {
     public List<IConfigElement> toGui(String mod_id) {
         List<IConfigElement> elements = new ArrayList<IConfigElement>();
         for (String key : config.keySet()) {
-            if (!defaults.containsKey(key))
-                continue;
+            if (!defaults.containsKey(key)) continue;
             try {
                 elements.add(ConfigElement.getTypedElement(mod_id, key, config, defaults));
             } catch (Exception e) {

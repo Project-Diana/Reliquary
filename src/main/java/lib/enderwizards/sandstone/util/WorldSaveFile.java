@@ -6,32 +6,34 @@ import net.minecraft.nbt.NBTTagCompound;
  * Created by Chylex - borrowed for NBT storage.
  */
 
-public abstract class WorldSaveFile{
+public abstract class WorldSaveFile {
+
     public final String filename;
     private boolean wasModified = false;
 
-    public WorldSaveFile(String filename){
+    public WorldSaveFile(String filename) {
         this.filename = filename;
     }
 
-    protected void setModified(){
+    protected void setModified() {
         wasModified = true;
     }
 
-    public boolean wasModified(){
+    public boolean wasModified() {
         return wasModified;
     }
 
-    public final void saveToNBT(NBTTagCompound nbt){
+    public final void saveToNBT(NBTTagCompound nbt) {
         wasModified = false;
         onSave(nbt);
     }
 
-    public final void loadFromNBT(NBTTagCompound nbt){
+    public final void loadFromNBT(NBTTagCompound nbt) {
         wasModified = false;
         onLoad(nbt);
     }
 
     protected abstract void onSave(NBTTagCompound nbt);
+
     protected abstract void onLoad(NBTTagCompound nbt);
 }

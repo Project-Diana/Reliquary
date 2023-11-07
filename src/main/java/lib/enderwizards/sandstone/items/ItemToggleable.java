@@ -1,11 +1,12 @@
 package lib.enderwizards.sandstone.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import lib.enderwizards.sandstone.util.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import lib.enderwizards.sandstone.util.NBTHelper;
 
 public class ItemToggleable extends ItemBase {
 
@@ -24,7 +25,11 @@ public class ItemToggleable extends ItemBase {
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote && player.isSneaking()) {
             toggleEnabled(stack);
-            player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.2F));
+            player.worldObj.playSoundAtEntity(
+                player,
+                "random.orb",
+                0.1F,
+                0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.2F));
             return stack;
         }
         return stack;

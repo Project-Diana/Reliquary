@@ -1,12 +1,13 @@
 package xreliquary.items;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lib.enderwizards.sandstone.init.ContentInit;
 import lib.enderwizards.sandstone.items.ItemBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import xreliquary.Reliquary;
 import xreliquary.entities.EntityLyssaHook;
 import xreliquary.lib.Names;
@@ -16,6 +17,7 @@ import xreliquary.lib.Names;
  */
 @ContentInit
 public class ItemRodOfLyssa extends ItemBase {
+
     public ItemRodOfLyssa() {
         super(Names.rod_of_lyssa);
         this.setCreativeTab(Reliquary.CREATIVE_TAB);
@@ -23,12 +25,12 @@ public class ItemRodOfLyssa extends ItemBase {
         this.setMaxStackSize(1);
         canRepair = false;
     }
+
     /**
      * Returns True is the item is renderer in full 3D when hold.
      */
     @SideOnly(Side.CLIENT)
-    public boolean isFull3D()
-    {
+    public boolean isFull3D() {
         return true;
     }
 
@@ -37,27 +39,21 @@ public class ItemRodOfLyssa extends ItemBase {
      * hands.
      */
     @SideOnly(Side.CLIENT)
-    public boolean shouldRotateAroundWhenRendering()
-    {
+    public boolean shouldRotateAroundWhenRendering() {
         return true;
     }
 
     /**
      * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
      */
-    public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer player)
-    {
-        if (player.fishEntity != null)
-        {
+    public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer player) {
+        if (player.fishEntity != null) {
             player.swingItem();
             player.fishEntity.func_146034_e();
-        }
-        else
-        {
+        } else {
             world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-            if (!world.isRemote)
-            {
+            if (!world.isRemote) {
                 world.spawnEntityInWorld(new EntityLyssaHook(world, player));
             }
 
