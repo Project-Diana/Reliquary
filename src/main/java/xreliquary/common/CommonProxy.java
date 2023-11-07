@@ -92,6 +92,7 @@ public class CommonProxy {
 
     public void init() {
         AlkahestryCraftingRecipe.returnedItem = Reliquary.CONTENT.getItem(Names.alkahestry_tome);
+        AlkahestryDrainRecipe.returnedItem = Reliquary.CONTENT.getItem(Names.alkahestry_tome);
         AlkahestryRedstoneRecipe.returnedItem = Reliquary.CONTENT.getItem(Names.alkahestry_tome);
 
         AlkahestryCraftingRecipe alkahestryCraftingRecipeHandler = new AlkahestryCraftingRecipe();
