@@ -1,23 +1,25 @@
-[
 {
-  "modid": "xreliquary",
-  "name": "Reliquary",
-  "description": "Two words: magical swag. Oh, and a gun.",
-  "version": "${version}",
-  "mcversion": "1.2.DEV",
-  "url": "",
-  "updateUrl": "",
-  "authorList": [
-    "x3n0ph0b3",
-    "TheMike"],
-  "credits": "Originally made by x3n0ph0b3, now maintained by TheMike.",
-  "logoFile": "/mods/xreliquary/textures/logo/xrlogo.png",
-  "screenshots": [
-  ],
-  "parent": "",
-  "requiredMods": [ "libsandstone@[1.0.0,)" ],
-  "dependencies": [ "libsandstone@[1.0.0,)" ],
-  "dependants": [  ],
-  "useDependencyInformation": "true"
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "${modId}",
+    "name": "${modName}",
+    "description": "Two words: magical swag. Oh, and a gun.",
+    "version": "${modVersion}",
+    "mcversion": "${minecraftVersion}",
+    "url": "https://github.com/Project-Diana/Reliquary",
+    "updateUrl": "",
+    "authorList": [
+      "x3n0ph0b3",
+      "TheMike",
+      "Cleptomania"],
+    "credits": "Originally made by x3n0ph0b3, current version maintained by TheMike. 1.7.10 Project Diana fork by Cleptomania",
+    "logoFile": "/mods/xreliquary/textures/logo/xrlogo.png",
+    "screenshots": [
+    ],
+    "parent": "",
+    "requiredMods": [ "libsandstone@[1.0.0,)" ],
+    "dependencies": [ "libsandstone@[1.0.0,)" ],
+    "dependants": [  ],
+    "useDependencyInformation": "true"
+  }]
 }
-]

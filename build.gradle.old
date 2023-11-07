@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        classpath 'org.codehaus.groovy:groovy-backports-compat23:2.3.5'
+    }
+}
+
+// We apply the 'forge' plugin, so ForgeGradle can do it's stuff.
+apply plugin: 'forge'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'java'
+
+group = 'xreliquary' // Your main package.
+version = "1.7.10-1.2.1.${getBuildNumber()}"
+archivesBaseName = 'Reliquary'
+
+sourceCompatiblity = 1.6
+targetCompatiblity = 1.7
+
+minecraft {
+	version = "1.7.10-10.13.4.1614-1.7.10"
+    //mappings = "stable_12"
+}
+
+processResources
+{
+    // Replace stuff in mcmod.info and in .lang files, nothing else.
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.lang'
+        include 'mcmod.info'
+
+        // Replace version and mcversion.
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // Copy everything else that wasn't replaced.
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.lang'
+        exclude 'mcmod.info'
+    }
+}
+
+def getBuildNumber() {
+    if (System.getenv("DRONE_BUILD_NUMBER") != null) {
+        return "${System.getenv("DRONE_BUILD_NUMBER")}"
+    }
+    return ""
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publish = true
+    configurations = ['archives']
+/*
+    filesSpec {
+        from 'build/libs'
+        into '.'
+        exclude '*sources.jar'
+    }
+*/
+    pkg {
+        version {
+            name="1.2.1"
+            released = new Date()
+        }
+        repo = 'maven'
+        name = 'Reliquary'
+        licenses = ['GPL-3.0']
+        vcsUrl = 'https://github.com/P3pp3rF1y/Reliquary.git'
+    }
+}

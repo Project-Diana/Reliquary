@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 public class EntityCauldronSteamFX extends EntityReddustFX
 {
     float reddustParticleScale;
-    private static final String __OBFID = "CL_00000923";
 
     public EntityCauldronSteamFX(World world, double x, double y, double z, double xMot, double yMot, double zMot, float red, float green, float blue)
     {
